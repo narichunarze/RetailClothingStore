@@ -3,23 +3,24 @@
 Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 
 ## Fase 0 · Setup (½ día)
-- [ ] Crear cuenta en Databricks Free Edition
-- [ ] Instalar Databricks CLI y autenticarse (`databricks auth login`)
-- [ ] Crear schemas `andesmart_dev` / `andesmart_prod` y volume `raw`
-- [ ] Subir repo a GitHub y configurar secrets (`DATABRICKS_HOST`, `DATABRICKS_TOKEN`)
+- [x] Crear cuenta en Databricks Free Edition
+- [x] Instalar Databricks CLI y autenticarse (token personal en `~/.databrickscfg`)
+- [x] Crear schemas `andesmart_dev` / `andesmart_prod` y volume `raw`
+- [x] Subir repo a GitHub y configurar secrets (`DATABRICKS_HOST`, `DATABRICKS_TOKEN`)
 - **Demo:** `databricks bundle validate` pasa
 
 ## Fase 1 · Datos fuente (1 día) — US-01
 - [x] `src/data_gen/generate.py`: productos (modelo × talla × color), tiendas, ventas diarias (temporadas, curva de tallas, efecto clima/feriados, quiebres), devoluciones e inventario
 - [x] Inyectar problemas de calidad a propósito (duplicados, precios negativos, nulos)
 - [x] Script de ingesta de Open-Meteo (clima) y Nager.Date (feriados) (`ingest_external.py`)
-- [ ] Ejecutar ingesta externa + generación completa y subir al volume (ver `docs/04-source-data.md`)
+- [x] Ejecutar ingesta externa + generación completa y subir al volume (ver `docs/04-source-data.md`)
 - **Demo:** archivos crudos en `/Volumes/.../raw/`
 
 ## Fase 2 · Bronze + Silver (1½ días) — US-01
-- [ ] Bronze con Auto Loader (`read_files` / `cloudFiles`)
-- [ ] Silver: tipos, dedupe, expectations (`expect_or_drop`, `expect`), cuarentena
-- [ ] Funciones de limpieza puras en `src/` con tests `pytest`
+- [x] Bronze con Auto Loader (`cloudFiles`, todo string + `_rescued_data`) y maestros/externos en batch
+- [x] Silver: tipos, dedupe, expectations (`expect_all_or_drop`, `expect_all`, `expect_or_fail`), cuarentena con motivo
+- [x] Funciones de limpieza puras en `src/transforms.py` con tests `pytest`
+- [ ] Desplegar y correr el pipeline en Databricks; revisar métricas de calidad y linaje
 - **Demo:** pipeline verde + métricas de calidad visibles
 
 ## Fase 3 · Gold + Dashboard (1½ días) — US-02

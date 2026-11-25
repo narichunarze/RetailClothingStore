@@ -5,8 +5,12 @@ resources:
       catalog: ${var.catalog}
       schema: ${var.schema}
       serverless: true
+      photon: true
+      channel: CURRENT
       configuration:
         raw_path: /Volumes/${var.catalog}/${var.schema}/raw
+        # Carpeta donde el bundle sincroniza el repo; permite `from src import transforms`.
+        bundle_root: ${workspace.file_path}
       libraries:
         - glob:
             include: ../src/pipelines/**
