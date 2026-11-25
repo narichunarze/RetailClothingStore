@@ -32,7 +32,7 @@ Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 ## Fase 4 · Orquestación + CI/CD (1 día) — US-06
 - [x] Job: pipeline → quality gate (→ forecast en Fase 5)
 - [x] GitHub Actions: lint + tests + validate en PR; deploy prod en `main` (ver `docs/06-cicd.md`)
-- [ ] Activar `DEPLOY_ENABLED` y verificar el primer deploy a prod
+- [x] Activar `DEPLOY_ENABLED` y verificar el primer deploy a prod (deploy + job + quality gate en verde)
 - [ ] Grants en Unity Catalog (rol "store_manager" solo lectura en Gold)
 - **Demo:** un merge despliega a prod automáticamente
 
