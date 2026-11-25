@@ -19,9 +19,9 @@ def _day(i):
 @pytest.fixture(scope="module")
 def dims(spark):
     products = spark.createDataFrame(
-        [("A-M", "A", "jeans", "M", "negro", 40.0)],
-        "sku string, model_id string, category string, size string, color string, "
-        "list_price_usd double")
+        [("A-M", "A", "jeans", "all", "M", "negro", 40.0)],
+        "sku string, model_id string, category string, season string, size string, "
+        "color string, list_price_usd double")
     stores = spark.createDataFrame([("S1", "PE", "Lima")], "store_id string, country string, city string")
     return products, stores
 
@@ -103,6 +103,16 @@ def test_lost_sales_estimate_is_close_to_truth(medallion):
     real = truth["lost_units"].sum()
     print(f"lost units est={est:.0f} real={real} ratio={est / real:.2f}")
     assert 0.7 * real < est < 1.3 * real, (est, real)
+
+
+def test_weekly_demand_uncensors_sales(spark, medallion):
+    _, so, _ = medallion
+    stores = spark.createDataFrame([(s, "S") for s in ["S001", "S002", "S003"]],
+                                   "store_id string, hemisphere string")
+    w = T.weekly_demand(so, stores)
+    r = w.agg(F.sum("units_sold").alias("u"), F.sum("lost_units_est").alias("l"),
+              F.sum("demand").alias("d"), F.max("days").alias("days")).first()
+    assert r.d == pytest.approx(r.u + r.l, rel=1e-3) and r.l > 0 and r.days == 7
 
 
 def test_kpi_weekly_rates_are_valid(medallion):

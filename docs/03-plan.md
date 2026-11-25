@@ -37,10 +37,13 @@ Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 - **Demo:** un merge despliega a prod automáticamente
 
 ## Fase 5 · Forecast + reposición (1½ días) — US-03, US-04
-- [ ] Baseline naive (misma semana anterior) → medir WAPE
-- [ ] Modelo (LightGBM o regresión con features de calendario/clima/lags), tracking en MLflow
-- [ ] Registrar modelo en Unity Catalog; batch inference a `gold_demand_forecast`
-- [ ] `gold_replenishment_suggestions`: días de cobertura y cantidad sugerida
+- [x] Baselines ingenuos (semana anterior, promedio de 4 semanas) → WAPE
+- [x] Modelo global HistGradientBoosting (Poisson) con lags, calendario comercial y curva de tallas; tracking en MLflow
+- [x] Registro en Unity Catalog con alias `champion` solo si supera al baseline
+- [x] `gold_demand_forecast` y `gold_replenishment_suggestions`, con comparación contra el reparto parejo actual
+- [x] Tarea `forecast` en el job, después del quality gate (ver `docs/07-forecast.md`)
+- [ ] Correr en Databricks y revisar el experimento y el modelo en la UI
+- [ ] (Mejora) generar dos años de datos para que el modelo aprenda Black Friday y Navidad
 - **Demo:** "estas 20 tallas/colores se quiebran esta semana en estas tiendas, envía X unidades"
 
 ## Fase 6 · Capa de IA para el negocio (1 día) — US-05

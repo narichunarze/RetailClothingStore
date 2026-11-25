@@ -51,3 +51,12 @@ def gold_kpi_weekly():
 )
 def gold_size_curve():
     return T.size_curve(_t("gold_stockout_daily"))
+
+
+@dp.materialized_view(
+    name="gold_weekly_demand",
+    comment="Demanda semanal por tienda-SKU (venta + venta perdida estimada). Base del forecast.",
+    cluster_by=["week_start"],
+)
+def gold_weekly_demand():
+    return T.weekly_demand(_t("gold_stockout_daily"), _t("silver_stores"))

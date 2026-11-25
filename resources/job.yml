@@ -2,7 +2,7 @@ resources:
   jobs:
     andesmart_daily:
       name: andesmart-daily-${var.schema}
-      description: Refresco diario del lakehouse + quality gate.
+      description: Refresco diario del lakehouse, quality gate y forecast + reposición.
       schedule:
         quartz_cron_expression: "0 0 6 * * ?"
         timezone_id: America/Lima
@@ -27,6 +27,13 @@ resources:
               schema: ${var.schema}
               bundle_root: ${workspace.file_path}
 
-        # Fase 5: forecast y reposición
-        # - task_key: forecast
-        #   depends_on: [{task_key: quality_gate}]
+        - task_key: forecast
+          depends_on:
+            - task_key: quality_gate
+          notebook_task:
+            notebook_path: ../src/jobs/forecast.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              bundle_root: ${workspace.file_path}
+              test_weeks: "8"

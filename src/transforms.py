@@ -245,7 +245,8 @@ def stockout_daily(inventory: DataFrame, daily: DataFrame, products: DataFrame,
                     F.when(F.col("avg_daily_demand") > 0,
                            F.round(F.col("on_hand") / F.col("avg_daily_demand"), 1)))
         .drop("on_hand_raw")
-        .join(products.select("sku", "model_id", "category", "size", "color", "list_price_usd"),
+        .join(products.select("sku", "model_id", "category", "season", "size", "color",
+                                  "list_price_usd"),
               "sku")
         .join(stores.select("store_id", "country", "city"), "store_id")
         .withColumn("lost_sales_usd_est",
@@ -290,3 +291,34 @@ def size_curve(stockouts: DataFrame) -> DataFrame:
             .withColumn("stock_minus_sales_share",
                         F.round(F.col("stock_share") - F.col("sales_share"), 4))
             .withColumn("stockout_rate", F.round("stockout_rate", 4)))
+
+
+def weekly_demand(stockouts: DataFrame, stores: DataFrame) -> DataFrame:
+    """Demanda semanal (lunes a domingo) por tienda-SKU: base de entrenamiento del forecast.
+
+    demand = units_sold + lost_units_est. La venta sola está censurada en días de quiebre
+    (no se vende lo que no hay); entrenar con ella subestimaría justo las tallas que se quiebran.
+    """
+    week = F.date_trunc("week", "date").cast("date")
+    return (
+        stockouts.withColumn("week_start", week)
+        .groupBy("store_id", "sku", "week_start")
+        .agg(
+            F.count("*").alias("days"),
+            F.first("model_id").alias("model_id"),
+            F.first("category").alias("category"),
+            F.first("season").alias("season"),
+            F.first("size").alias("size"),
+            F.first("color").alias("color"),
+            F.first("country").alias("country"),
+            # double (no decimal): pandas convierte decimal a objetos Decimal lentos e incompatibles
+            F.first("list_price_usd").cast("double").alias("list_price_usd"),
+            F.sum("units_sold").alias("units_sold"),
+            F.round(F.sum("lost_units_est"), 2).alias("lost_units_est"),
+            F.sum(F.col("is_stockout").cast("int")).alias("stockout_days"),
+            F.max_by("on_hand", "date").alias("on_hand_end"),
+            F.max_by("in_transit", "date").alias("in_transit_end"),
+        )
+        .withColumn("demand", F.round(F.col("units_sold") + F.col("lost_units_est"), 2))
+        .join(stores.select("store_id", "hemisphere"), "store_id")
+    )
