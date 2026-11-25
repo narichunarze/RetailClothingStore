@@ -4,6 +4,15 @@ bundle:
 include:
   - resources/*.yml
 
+# Wheel con la lógica de negocio (src/). dynamic_version agrega un sufijo único por deploy
+# para que el entorno serverless no reutilice una versión cacheada.
+artifacts:
+  andesmart_lib:
+    type: whl
+    path: .
+    build: python -m pip wheel --no-deps --wheel-dir dist .
+    dynamic_version: true
+
 variables:
   catalog:
     description: Unity Catalog catalog
@@ -27,6 +36,9 @@ targets:
   dev:
     mode: development
     default: true
+    workspace:
+      # Los artefactos (wheel) van a un Volume de UC, no al sistema de archivos del workspace.
+      artifact_path: /Volumes/workspace/andesmart_dev/artifacts
     variables:
       schema: andesmart_dev
 
@@ -34,6 +46,7 @@ targets:
     mode: production
     workspace:
       root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
+      artifact_path: /Volumes/workspace/andesmart_prod/artifacts
     permissions:
       - user_name: ${workspace.current_user.userName}
         level: CAN_MANAGE

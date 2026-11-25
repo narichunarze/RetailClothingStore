@@ -1,7 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "andesmart-lakehouse"
 version = "0.1.0"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
+description = "Lógica de negocio de AndesMart (transformaciones, ML, capa semántica)."
+# Sin dependencias declaradas a propósito: en Databricks ya vienen pyspark/pandas/numpy y
+# scikit-learn/mlflow se fijan en el entorno serverless del job (resources/job.yml).
+
+[project.scripts]
+quality_gate = "src.entrypoints:quality_gate"
+forecast = "src.entrypoints:forecast"
+semantic_layer = "src.entrypoints:semantic_layer"
+
+[tool.setuptools.packages.find]
+include = ["src", "src.data_gen", "src.ml"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

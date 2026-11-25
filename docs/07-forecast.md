@@ -58,4 +58,4 @@ La tabla `gold_replenishment_suggestions` incluye `even_split_units`, lo que hab
 | Modelo | Unity Catalog → `workspace.<schema>.demand_forecast`, alias `champion` |
 | Predicciones | `gold_demand_forecast` |
 | Reposición | `gold_replenishment_suggestions` (ordenada por `at_risk_sales_usd`) |
-| Código | `src/ml/` (tests en `tests/test_ml.py`), notebook del job `src/jobs/forecast.py` |
+| Código | `src/ml/` (tests en `tests/test_ml.py`), tarea del job `src/entrypoints.py:forecast` (wheel) |

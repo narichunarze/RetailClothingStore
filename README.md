@@ -81,6 +81,7 @@ Todo se desarrolló con Claude Code. El [AI Log](AI_LOG.md) registra qué gener�
 - [ADR-0001](docs/adr/0001-medallion-lakehouse.md) Medallion sobre Delta Lake
 - [ADR-0002](docs/adr/0002-lakeflow-declarative-pipelines.md) Lakeflow Declarative Pipelines, con la lógica en funciones testeables
 - [ADR-0003](docs/adr/0003-asset-bundles-cicd.md) Asset Bundles + GitHub Actions
+- [ADR-0004](docs/adr/0004-wheel-instead-of-workspace-imports.md) Tareas del job como wheel desde un Volume (incidente de `Input/output error`)
 
 **Limitaciones de Free Edition** (en un cliente real se haría distinto):
 - Un solo workspace: dev y prod separados por schema, con la misma landing zone.
@@ -114,7 +115,7 @@ src/pipelines/{bronze,silver,gold}/
 src/transforms.py                lógica Silver/Gold (testeada)
 src/ml/                          features, entrenamiento y reposición
 src/semantic.py                  vistas para Genie + benchmarks
-src/jobs/                        notebooks del job (quality gate, forecast, capa semántica)
+src/entrypoints.py               tareas del job (wheel): quality gate, forecast, capa semántica
 tests/                           pytest
 docs/                            discovery, arquitectura, ADRs, guías
 ```

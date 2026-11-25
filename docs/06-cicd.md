@@ -18,7 +18,7 @@ flowchart LR
 ## Job diario `andesmart_daily`
 
 1. `refresh_medallion`: pipeline Bronze → Silver → Gold.
-2. `quality_gate` (`src/jobs/quality_gate.py`): falla el job si:
+2. `quality_gate` (`src/entrypoints.py`, instalado como wheel; ver ADR-0004): falla el job si:
    - alguna tabla clave está vacía;
    - la cuarentena de ventas supera el 1%;
    - la tasa de quiebre sale de rango (0–30%).

@@ -7,3 +7,6 @@ data/*
 !data/.gitkeep
 spark-warehouse/
 metastore_db/
+dist/
+build/
+*.egg-info/

@@ -12,7 +12,18 @@ resources:
         on_failure:
           - ${workspace.current_user.userName}
       max_concurrent_runs: 1
-      # Las tareas de notebook reintentan una vez ante fallos transitorios (p. ej. I/O del workspace).
+
+      # Entorno serverless: instala el wheel del proyecto (construido por el bundle y
+      # guardado en un Volume) en vez de importar archivos del workspace. Ver ADR-0004.
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "2"
+            dependencies:
+              - ../dist/*.whl
+              - scikit-learn==1.5.2
+              - mlflow==2.19.0
+
       tasks:
         - task_key: refresh_medallion
           pipeline_task:
@@ -23,24 +34,26 @@ resources:
           min_retry_interval_millis: 60000
           depends_on:
             - task_key: refresh_medallion
-          notebook_task:
-            notebook_path: ../src/jobs/quality_gate.py
-            base_parameters:
+          environment_key: default
+          python_wheel_task:
+            package_name: andesmart_lakehouse
+            entry_point: quality_gate
+            named_parameters:
               catalog: ${var.catalog}
               schema: ${var.schema}
-              bundle_root: ${workspace.file_path}
 
         - task_key: forecast
           max_retries: 1
           min_retry_interval_millis: 60000
           depends_on:
             - task_key: quality_gate
-          notebook_task:
-            notebook_path: ../src/jobs/forecast.py
-            base_parameters:
+          environment_key: default
+          python_wheel_task:
+            package_name: andesmart_lakehouse
+            entry_point: forecast
+            named_parameters:
               catalog: ${var.catalog}
               schema: ${var.schema}
-              bundle_root: ${workspace.file_path}
               test_weeks: "8"
 
         - task_key: semantic_layer
@@ -48,10 +61,11 @@ resources:
           min_retry_interval_millis: 60000
           depends_on:
             - task_key: forecast
-          notebook_task:
-            notebook_path: ../src/jobs/semantic_layer.py
-            base_parameters:
+          environment_key: default
+          python_wheel_task:
+            package_name: andesmart_lakehouse
+            entry_point: semantic_layer
+            named_parameters:
               catalog: ${var.catalog}
               schema: ${var.schema}
-              bundle_root: ${workspace.file_path}
               reader_group: ${var.reader_group}
