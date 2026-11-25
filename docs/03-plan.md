@@ -54,8 +54,8 @@ Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 - **Demo:** preguntas en español respondidas correctamente
 
 ## Fase 7 · Entrega (½–1 día)
-- [ ] README final: problema → solución → resultados → trade-offs → próximos pasos
-- [ ] Capturas del dashboard y del linaje en `docs/img/`
+- [x] README final: problema → hallazgo → solución → resultados → trade-offs → próximos pasos
+- [ ] Capturas en `docs/img/`: linaje del pipeline, data quality, MLflow, Genie, dashboard
 - [ ] Video de 3 min "presentación al cliente"
 - [ ] Repasar `AI_LOG.md` y preparar historias STAR para la entrevista
 
