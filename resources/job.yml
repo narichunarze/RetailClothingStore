@@ -12,13 +12,13 @@ resources:
         on_failure:
           - ${workspace.current_user.userName}
       max_concurrent_runs: 1
+      # Las tareas de notebook reintentan una vez ante fallos transitorios (p. ej. I/O del workspace).
       tasks:
         - task_key: refresh_medallion
           pipeline_task:
             pipeline_id: ${resources.pipelines.andesmart_medallion.id}
 
         - task_key: quality_gate
-          # reintento ante fallos transitorios (p. ej. I/O del workspace)
           max_retries: 1
           min_retry_interval_millis: 60000
           depends_on:
@@ -35,7 +35,6 @@ resources:
           min_retry_interval_millis: 60000
           depends_on:
             - task_key: quality_gate
-          # reintento ante fallos transitorios (p. ej. I/O del workspace)
           max_retries: 1
           min_retry_interval_millis: 60000
           notebook_task:
@@ -51,8 +50,6 @@ resources:
           min_retry_interval_millis: 60000
           depends_on:
             - task_key: forecast
-          max_retries: 1
-          min_retry_interval_millis: 60000
           notebook_task:
             notebook_path: ../src/jobs/semantic_layer.py
             base_parameters:
