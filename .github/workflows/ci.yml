@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: [main]
+    # Cambios solo de la página o de documentación no despliegan a Databricks.
+    paths-ignore: ["site/**", "docs/**", "**/*.md", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 # En PRs se cancela la corrida anterior; en main los deploys hacen cola. Cancelar un

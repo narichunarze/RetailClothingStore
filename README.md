@@ -2,6 +2,8 @@
 
 [![CI/CD](https://github.com/narichunarze/RetailClothingStore/actions/workflows/ci.yml/badge.svg)](https://github.com/narichunarze/RetailClothingStore/actions/workflows/ci.yml)
 
+**🌐 Caso de estudio interactivo, con simulador de reposición:** https://narichunarze.github.io/RetailClothingStore/
+
 Simulación de un engagement de **Forward Deployed Engineer** de punta a punta: discovery con el negocio, arquitectura, desarrollo AI-first, CI/CD y producción en Databricks.
 
 ## El problema
@@ -118,4 +120,5 @@ src/semantic.py                  vistas para Genie + benchmarks
 src/entrypoints.py               tareas del job (wheel): quality gate, forecast, capa semántica
 tests/                           pytest
 docs/                            discovery, arquitectura, ADRs, guías
+site/                            página de portafolio (GitHub Pages); datos: src/data_gen/export_site_data.py
 ```

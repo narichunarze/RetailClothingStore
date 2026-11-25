@@ -83,3 +83,14 @@ def test_no_files_written_without_out(tmp_path, monkeypatch):
 def test_unknown_policy_rejected():
     with pytest.raises(ValueError):
         simulate(None, None, dt.date(2025, 1, 1), 5, 2, 3, 1, policy="magic")
+
+
+def test_site_data_export_structure():
+    from src.data_gen.export_site_data import build
+
+    d = build(start=dt.date(2025, 3, 1), days=60, summary_seeds=[1], n_stores=3, n_models=8)
+    assert set(d["policies"]) == {"even_split", "size_curve", "size_aware"}
+    assert [r["size"] for r in d["size_curve"]] == ["XS", "S", "M", "L", "XL", "XXL"]
+    assert abs(sum(r["demand_share"] for r in d["size_curve"]) - 1) < 0.01
+    assert len(d["policies"]["even_split"]["weekly"]) >= 8
+    assert d["summary"]["even_split"]["lost_units_vs_current"] == 0

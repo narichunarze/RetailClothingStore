@@ -1,0 +1,1215 @@
+{
+ "generated_at": "2026-11-25",
+ "setup": {
+  "stores": 12,
+  "countries": 4,
+  "models": 40,
+  "days": 365,
+  "chart_seed": 42,
+  "summary_seeds": [
+   42,
+   7,
+   123
+  ]
+ },
+ "policies": {
+  "even_split": {
+   "stockout_rate": 0.0585,
+   "fill_rate": 0.9456,
+   "lost_units": 36715,
+   "avg_inventory_units": 40876.6,
+   "by_size": {
+    "XS": {
+     "units_sold": 37922,
+     "lost_units": 43,
+     "avg_on_hand": 8869.1,
+     "stockout_rate": 0.0039
+    },
+    "S": {
+     "units_sold": 111293,
+     "lost_units": 3156,
+     "avg_on_hand": 5548.5,
+     "stockout_rate": 0.0453
+    },
+    "M": {
+     "units_sold": 170999,
+     "lost_units": 18813,
+     "avg_on_hand": 4031.3,
+     "stockout_rate": 0.1306
+    },
+    "L": {
+     "units_sold": 152179,
+     "lost_units": 11883,
+     "avg_on_hand": 4484.3,
+     "stockout_rate": 0.0994
+    },
+    "XL": {
+     "units_sold": 87480,
+     "lost_units": 1274,
+     "avg_on_hand": 6343.4,
+     "stockout_rate": 0.0254
+    },
+    "XXL": {
+     "units_sold": 38099,
+     "lost_units": 56,
+     "avg_on_hand": 8882.9,
+     "stockout_rate": 0.0037
+    }
+   },
+   "weekly": [
+    {
+     "week_end": "2025-01-05",
+     "stockout_rate": 0.0706,
+     "lost_units": 252,
+     "demand_units": 8685
+    },
+    {
+     "week_end": "2025-01-12",
+     "stockout_rate": 0.2588,
+     "lost_units": 4426,
+     "demand_units": 13431
+    },
+    {
+     "week_end": "2025-01-19",
+     "stockout_rate": 0.2498,
+     "lost_units": 3819,
+     "demand_units": 13357
+    },
+    {
+     "week_end": "2025-01-26",
+     "stockout_rate": 0.0769,
+     "lost_units": 853,
+     "demand_units": 13347
+    },
+    {
+     "week_end": "2025-02-02",
+     "stockout_rate": 0.0822,
+     "lost_units": 1141,
+     "demand_units": 13390
+    },
+    {
+     "week_end": "2025-02-09",
+     "stockout_rate": 0.051,
+     "lost_units": 493,
+     "demand_units": 13426
+    },
+    {
+     "week_end": "2025-02-16",
+     "stockout_rate": 0.0423,
+     "lost_units": 344,
+     "demand_units": 14345
+    },
+    {
+     "week_end": "2025-02-23",
+     "stockout_rate": 0.0528,
+     "lost_units": 644,
+     "demand_units": 16347
+    },
+    {
+     "week_end": "2025-03-02",
+     "stockout_rate": 0.0491,
+     "lost_units": 581,
+     "demand_units": 15189
+    },
+    {
+     "week_end": "2025-03-09",
+     "stockout_rate": 0.0448,
+     "lost_units": 370,
+     "demand_units": 12881
+    },
+    {
+     "week_end": "2025-03-16",
+     "stockout_rate": 0.0471,
+     "lost_units": 333,
+     "demand_units": 12900
+    },
+    {
+     "week_end": "2025-03-23",
+     "stockout_rate": 0.0445,
+     "lost_units": 308,
+     "demand_units": 12770
+    },
+    {
+     "week_end": "2025-03-30",
+     "stockout_rate": 0.0425,
+     "lost_units": 323,
+     "demand_units": 12550
+    },
+    {
+     "week_end": "2025-04-06",
+     "stockout_rate": 0.0393,
+     "lost_units": 270,
+     "demand_units": 10403
+    },
+    {
+     "week_end": "2025-04-13",
+     "stockout_rate": 0.0405,
+     "lost_units": 308,
+     "demand_units": 10293
+    },
+    {
+     "week_end": "2025-04-20",
+     "stockout_rate": 0.0423,
+     "lost_units": 291,
+     "demand_units": 10285
+    },
+    {
+     "week_end": "2025-04-27",
+     "stockout_rate": 0.0435,
+     "lost_units": 327,
+     "demand_units": 10285
+    },
+    {
+     "week_end": "2025-05-04",
+     "stockout_rate": 0.0528,
+     "lost_units": 542,
+     "demand_units": 10824
+    },
+    {
+     "week_end": "2025-05-11",
+     "stockout_rate": 0.0875,
+     "lost_units": 1855,
+     "demand_units": 16392
+    },
+    {
+     "week_end": "2025-05-18",
+     "stockout_rate": 0.0799,
+     "lost_units": 1034,
+     "demand_units": 11070
+    },
+    {
+     "week_end": "2025-05-25",
+     "stockout_rate": 0.0249,
+     "lost_units": 184,
+     "demand_units": 11203
+    },
+    {
+     "week_end": "2025-06-01",
+     "stockout_rate": 0.0266,
+     "lost_units": 213,
+     "demand_units": 11105
+    },
+    {
+     "week_end": "2025-06-08",
+     "stockout_rate": 0.0351,
+     "lost_units": 328,
+     "demand_units": 11402
+    },
+    {
+     "week_end": "2025-06-15",
+     "stockout_rate": 0.0373,
+     "lost_units": 303,
+     "demand_units": 11496
+    },
+    {
+     "week_end": "2025-06-22",
+     "stockout_rate": 0.0375,
+     "lost_units": 291,
+     "demand_units": 11436
+    },
+    {
+     "week_end": "2025-06-29",
+     "stockout_rate": 0.0377,
+     "lost_units": 262,
+     "demand_units": 11519
+    },
+    {
+     "week_end": "2025-07-06",
+     "stockout_rate": 0.0387,
+     "lost_units": 269,
+     "demand_units": 11815
+    },
+    {
+     "week_end": "2025-07-13",
+     "stockout_rate": 0.04,
+     "lost_units": 274,
+     "demand_units": 11721
+    },
+    {
+     "week_end": "2025-07-20",
+     "stockout_rate": 0.0399,
+     "lost_units": 243,
+     "demand_units": 11598
+    },
+    {
+     "week_end": "2025-07-27",
+     "stockout_rate": 0.0426,
+     "lost_units": 270,
+     "demand_units": 11730
+    },
+    {
+     "week_end": "2025-08-03",
+     "stockout_rate": 0.0416,
+     "lost_units": 262,
+     "demand_units": 11665
+    },
+    {
+     "week_end": "2025-08-10",
+     "stockout_rate": 0.0436,
+     "lost_units": 312,
+     "demand_units": 11576
+    },
+    {
+     "week_end": "2025-08-17",
+     "stockout_rate": 0.0446,
+     "lost_units": 285,
+     "demand_units": 12823
+    },
+    {
+     "week_end": "2025-08-24",
+     "stockout_rate": 0.0522,
+     "lost_units": 519,
+     "demand_units": 13601
+    },
+    {
+     "week_end": "2025-08-31",
+     "stockout_rate": 0.0457,
+     "lost_units": 424,
+     "demand_units": 13433
+    },
+    {
+     "week_end": "2025-09-07",
+     "stockout_rate": 0.059,
+     "lost_units": 508,
+     "demand_units": 12004
+    },
+    {
+     "week_end": "2025-09-14",
+     "stockout_rate": 0.0695,
+     "lost_units": 623,
+     "demand_units": 11925
+    },
+    {
+     "week_end": "2025-09-21",
+     "stockout_rate": 0.054,
+     "lost_units": 393,
+     "demand_units": 11990
+    },
+    {
+     "week_end": "2025-09-28",
+     "stockout_rate": 0.0468,
+     "lost_units": 368,
+     "demand_units": 11936
+    },
+    {
+     "week_end": "2025-10-05",
+     "stockout_rate": 0.051,
+     "lost_units": 424,
+     "demand_units": 10669
+    },
+    {
+     "week_end": "2025-10-12",
+     "stockout_rate": 0.0406,
+     "lost_units": 321,
+     "demand_units": 10133
+    },
+    {
+     "week_end": "2025-10-19",
+     "stockout_rate": 0.0419,
+     "lost_units": 261,
+     "demand_units": 10111
+    },
+    {
+     "week_end": "2025-10-26",
+     "stockout_rate": 0.0471,
+     "lost_units": 331,
+     "demand_units": 10304
+    },
+    {
+     "week_end": "2025-11-02",
+     "stockout_rate": 0.0471,
+     "lost_units": 433,
+     "demand_units": 11022
+    },
+    {
+     "week_end": "2025-11-09",
+     "stockout_rate": 0.0703,
+     "lost_units": 1055,
+     "demand_units": 12681
+    },
+    {
+     "week_end": "2025-11-16",
+     "stockout_rate": 0.0669,
+     "lost_units": 949,
+     "demand_units": 12642
+    },
+    {
+     "week_end": "2025-11-23",
+     "stockout_rate": 0.0467,
+     "lost_units": 518,
+     "demand_units": 12831
+    },
+    {
+     "week_end": "2025-11-30",
+     "stockout_rate": 0.0743,
+     "lost_units": 1697,
+     "demand_units": 24499
+    },
+    {
+     "week_end": "2025-12-07",
+     "stockout_rate": 0.1204,
+     "lost_units": 2121,
+     "demand_units": 13621
+    },
+    {
+     "week_end": "2025-12-14",
+     "stockout_rate": 0.018,
+     "lost_units": 149,
+     "demand_units": 18357
+    },
+    {
+     "week_end": "2025-12-21",
+     "stockout_rate": 0.0588,
+     "lost_units": 1158,
+     "demand_units": 26914
+    },
+    {
+     "week_end": "2025-12-28",
+     "stockout_rate": 0.1003,
+     "lost_units": 2447,
+     "demand_units": 18408
+    },
+    {
+     "week_end": "2025-12-31",
+     "stockout_rate": 0.0104,
+     "lost_units": 6,
+     "demand_units": 4657
+    }
+   ]
+  },
+  "size_curve": {
+   "stockout_rate": 0.0402,
+   "fill_rate": 0.9745,
+   "lost_units": 17222,
+   "avg_inventory_units": 39963.4,
+   "by_size": {
+    "XS": {
+     "units_sold": 37215,
+     "lost_units": 750,
+     "avg_on_hand": 3407.9,
+     "stockout_rate": 0.0394
+    },
+    "S": {
+     "units_sold": 111820,
+     "lost_units": 2629,
+     "avg_on_hand": 6529.7,
+     "stockout_rate": 0.0375
+    },
+    "M": {
+     "units_sold": 184348,
+     "lost_units": 5464,
+     "avg_on_hand": 9698.6,
+     "stockout_rate": 0.0385
+    },
+    "L": {
+     "units_sold": 159518,
+     "lost_units": 4544,
+     "avg_on_hand": 8713.9,
+     "stockout_rate": 0.0382
+    },
+    "XL": {
+     "units_sold": 86848,
+     "lost_units": 1906,
+     "avg_on_hand": 5414.2,
+     "stockout_rate": 0.0375
+    },
+    "XXL": {
+     "units_sold": 37375,
+     "lost_units": 780,
+     "avg_on_hand": 3388.9,
+     "stockout_rate": 0.0408
+    }
+   },
+   "weekly": [
+    {
+     "week_end": "2025-01-05",
+     "stockout_rate": 0.0706,
+     "lost_units": 252,
+     "demand_units": 8685
+    },
+    {
+     "week_end": "2025-01-12",
+     "stockout_rate": 0.2588,
+     "lost_units": 4426,
+     "demand_units": 13431
+    },
+    {
+     "week_end": "2025-01-19",
+     "stockout_rate": 0.25,
+     "lost_units": 3808,
+     "demand_units": 13357
+    },
+    {
+     "week_end": "2025-01-26",
+     "stockout_rate": 0.0633,
+     "lost_units": 434,
+     "demand_units": 13347
+    },
+    {
+     "week_end": "2025-02-02",
+     "stockout_rate": 0.0596,
+     "lost_units": 463,
+     "demand_units": 13390
+    },
+    {
+     "week_end": "2025-02-09",
+     "stockout_rate": 0.0361,
+     "lost_units": 205,
+     "demand_units": 13426
+    },
+    {
+     "week_end": "2025-02-16",
+     "stockout_rate": 0.0267,
+     "lost_units": 112,
+     "demand_units": 14345
+    },
+    {
+     "week_end": "2025-02-23",
+     "stockout_rate": 0.0329,
+     "lost_units": 179,
+     "demand_units": 16347
+    },
+    {
+     "week_end": "2025-03-02",
+     "stockout_rate": 0.0304,
+     "lost_units": 165,
+     "demand_units": 15189
+    },
+    {
+     "week_end": "2025-03-09",
+     "stockout_rate": 0.0298,
+     "lost_units": 146,
+     "demand_units": 12881
+    },
+    {
+     "week_end": "2025-03-16",
+     "stockout_rate": 0.0334,
+     "lost_units": 151,
+     "demand_units": 12900
+    },
+    {
+     "week_end": "2025-03-23",
+     "stockout_rate": 0.0297,
+     "lost_units": 117,
+     "demand_units": 12770
+    },
+    {
+     "week_end": "2025-03-30",
+     "stockout_rate": 0.0258,
+     "lost_units": 111,
+     "demand_units": 12550
+    },
+    {
+     "week_end": "2025-04-06",
+     "stockout_rate": 0.0236,
+     "lost_units": 88,
+     "demand_units": 10403
+    },
+    {
+     "week_end": "2025-04-13",
+     "stockout_rate": 0.0234,
+     "lost_units": 106,
+     "demand_units": 10293
+    },
+    {
+     "week_end": "2025-04-20",
+     "stockout_rate": 0.0267,
+     "lost_units": 124,
+     "demand_units": 10285
+    },
+    {
+     "week_end": "2025-04-27",
+     "stockout_rate": 0.0261,
+     "lost_units": 98,
+     "demand_units": 10285
+    },
+    {
+     "week_end": "2025-05-04",
+     "stockout_rate": 0.0311,
+     "lost_units": 177,
+     "demand_units": 10824
+    },
+    {
+     "week_end": "2025-05-11",
+     "stockout_rate": 0.0628,
+     "lost_units": 773,
+     "demand_units": 16392
+    },
+    {
+     "week_end": "2025-05-18",
+     "stockout_rate": 0.0585,
+     "lost_units": 416,
+     "demand_units": 11070
+    },
+    {
+     "week_end": "2025-05-25",
+     "stockout_rate": 0.0184,
+     "lost_units": 80,
+     "demand_units": 11203
+    },
+    {
+     "week_end": "2025-06-01",
+     "stockout_rate": 0.0168,
+     "lost_units": 55,
+     "demand_units": 11105
+    },
+    {
+     "week_end": "2025-06-08",
+     "stockout_rate": 0.022,
+     "lost_units": 76,
+     "demand_units": 11402
+    },
+    {
+     "week_end": "2025-06-15",
+     "stockout_rate": 0.0219,
+     "lost_units": 77,
+     "demand_units": 11496
+    },
+    {
+     "week_end": "2025-06-22",
+     "stockout_rate": 0.0202,
+     "lost_units": 86,
+     "demand_units": 11436
+    },
+    {
+     "week_end": "2025-06-29",
+     "stockout_rate": 0.0226,
+     "lost_units": 74,
+     "demand_units": 11519
+    },
+    {
+     "week_end": "2025-07-06",
+     "stockout_rate": 0.0236,
+     "lost_units": 80,
+     "demand_units": 11815
+    },
+    {
+     "week_end": "2025-07-13",
+     "stockout_rate": 0.0245,
+     "lost_units": 55,
+     "demand_units": 11721
+    },
+    {
+     "week_end": "2025-07-20",
+     "stockout_rate": 0.0232,
+     "lost_units": 90,
+     "demand_units": 11598
+    },
+    {
+     "week_end": "2025-07-27",
+     "stockout_rate": 0.0263,
+     "lost_units": 80,
+     "demand_units": 11730
+    },
+    {
+     "week_end": "2025-08-03",
+     "stockout_rate": 0.0264,
+     "lost_units": 58,
+     "demand_units": 11665
+    },
+    {
+     "week_end": "2025-08-10",
+     "stockout_rate": 0.0245,
+     "lost_units": 92,
+     "demand_units": 11576
+    },
+    {
+     "week_end": "2025-08-17",
+     "stockout_rate": 0.0231,
+     "lost_units": 79,
+     "demand_units": 12823
+    },
+    {
+     "week_end": "2025-08-24",
+     "stockout_rate": 0.0271,
+     "lost_units": 94,
+     "demand_units": 13601
+    },
+    {
+     "week_end": "2025-08-31",
+     "stockout_rate": 0.0297,
+     "lost_units": 100,
+     "demand_units": 13433
+    },
+    {
+     "week_end": "2025-09-07",
+     "stockout_rate": 0.0374,
+     "lost_units": 190,
+     "demand_units": 12004
+    },
+    {
+     "week_end": "2025-09-14",
+     "stockout_rate": 0.0471,
+     "lost_units": 272,
+     "demand_units": 11925
+    },
+    {
+     "week_end": "2025-09-21",
+     "stockout_rate": 0.0338,
+     "lost_units": 124,
+     "demand_units": 11990
+    },
+    {
+     "week_end": "2025-09-28",
+     "stockout_rate": 0.0287,
+     "lost_units": 116,
+     "demand_units": 11936
+    },
+    {
+     "week_end": "2025-10-05",
+     "stockout_rate": 0.0284,
+     "lost_units": 120,
+     "demand_units": 10669
+    },
+    {
+     "week_end": "2025-10-12",
+     "stockout_rate": 0.0242,
+     "lost_units": 80,
+     "demand_units": 10133
+    },
+    {
+     "week_end": "2025-10-19",
+     "stockout_rate": 0.0273,
+     "lost_units": 85,
+     "demand_units": 10111
+    },
+    {
+     "week_end": "2025-10-26",
+     "stockout_rate": 0.0267,
+     "lost_units": 91,
+     "demand_units": 10304
+    },
+    {
+     "week_end": "2025-11-02",
+     "stockout_rate": 0.0292,
+     "lost_units": 116,
+     "demand_units": 11022
+    },
+    {
+     "week_end": "2025-11-09",
+     "stockout_rate": 0.0446,
+     "lost_units": 391,
+     "demand_units": 12681
+    },
+    {
+     "week_end": "2025-11-16",
+     "stockout_rate": 0.0452,
+     "lost_units": 333,
+     "demand_units": 12642
+    },
+    {
+     "week_end": "2025-11-23",
+     "stockout_rate": 0.0279,
+     "lost_units": 138,
+     "demand_units": 12831
+    },
+    {
+     "week_end": "2025-11-30",
+     "stockout_rate": 0.0424,
+     "lost_units": 391,
+     "demand_units": 24499
+    },
+    {
+     "week_end": "2025-12-07",
+     "stockout_rate": 0.0743,
+     "lost_units": 533,
+     "demand_units": 13621
+    },
+    {
+     "week_end": "2025-12-14",
+     "stockout_rate": 0.0126,
+     "lost_units": 58,
+     "demand_units": 18357
+    },
+    {
+     "week_end": "2025-12-21",
+     "stockout_rate": 0.0297,
+     "lost_units": 196,
+     "demand_units": 26914
+    },
+    {
+     "week_end": "2025-12-28",
+     "stockout_rate": 0.053,
+     "lost_units": 457,
+     "demand_units": 18408
+    },
+    {
+     "week_end": "2025-12-31",
+     "stockout_rate": 0.0086,
+     "lost_units": 4,
+     "demand_units": 4657
+    }
+   ]
+  },
+  "size_aware": {
+   "stockout_rate": 0.0366,
+   "fill_rate": 0.9766,
+   "lost_units": 15811,
+   "avg_inventory_units": 41285.3,
+   "by_size": {
+    "XS": {
+     "units_sold": 37279,
+     "lost_units": 686,
+     "avg_on_hand": 3487.0,
+     "stockout_rate": 0.0362
+    },
+    "S": {
+     "units_sold": 112098,
+     "lost_units": 2351,
+     "avg_on_hand": 6740.5,
+     "stockout_rate": 0.0336
+    },
+    "M": {
+     "units_sold": 184666,
+     "lost_units": 5146,
+     "avg_on_hand": 10057.6,
+     "stockout_rate": 0.0351
+    },
+    "L": {
+     "units_sold": 159879,
+     "lost_units": 4183,
+     "avg_on_hand": 9016.8,
+     "stockout_rate": 0.0344
+    },
+    "XL": {
+     "units_sold": 87060,
+     "lost_units": 1694,
+     "avg_on_hand": 5594.7,
+     "stockout_rate": 0.0342
+    },
+    "XXL": {
+     "units_sold": 37461,
+     "lost_units": 694,
+     "avg_on_hand": 3480.9,
+     "stockout_rate": 0.0363
+    }
+   },
+   "weekly": [
+    {
+     "week_end": "2025-01-05",
+     "stockout_rate": 0.0706,
+     "lost_units": 252,
+     "demand_units": 8685
+    },
+    {
+     "week_end": "2025-01-12",
+     "stockout_rate": 0.2588,
+     "lost_units": 4426,
+     "demand_units": 13431
+    },
+    {
+     "week_end": "2025-01-19",
+     "stockout_rate": 0.246,
+     "lost_units": 3772,
+     "demand_units": 13357
+    },
+    {
+     "week_end": "2025-01-26",
+     "stockout_rate": 0.0362,
+     "lost_units": 181,
+     "demand_units": 13347
+    },
+    {
+     "week_end": "2025-02-02",
+     "stockout_rate": 0.0281,
+     "lost_units": 118,
+     "demand_units": 13390
+    },
+    {
+     "week_end": "2025-02-09",
+     "stockout_rate": 0.0254,
+     "lost_units": 122,
+     "demand_units": 13426
+    },
+    {
+     "week_end": "2025-02-16",
+     "stockout_rate": 0.0213,
+     "lost_units": 82,
+     "demand_units": 14345
+    },
+    {
+     "week_end": "2025-02-23",
+     "stockout_rate": 0.0277,
+     "lost_units": 138,
+     "demand_units": 16347
+    },
+    {
+     "week_end": "2025-03-02",
+     "stockout_rate": 0.0281,
+     "lost_units": 146,
+     "demand_units": 15189
+    },
+    {
+     "week_end": "2025-03-09",
+     "stockout_rate": 0.0279,
+     "lost_units": 146,
+     "demand_units": 12881
+    },
+    {
+     "week_end": "2025-03-16",
+     "stockout_rate": 0.0304,
+     "lost_units": 135,
+     "demand_units": 12900
+    },
+    {
+     "week_end": "2025-03-23",
+     "stockout_rate": 0.0268,
+     "lost_units": 111,
+     "demand_units": 12770
+    },
+    {
+     "week_end": "2025-03-30",
+     "stockout_rate": 0.0234,
+     "lost_units": 99,
+     "demand_units": 12550
+    },
+    {
+     "week_end": "2025-04-06",
+     "stockout_rate": 0.0224,
+     "lost_units": 81,
+     "demand_units": 10403
+    },
+    {
+     "week_end": "2025-04-13",
+     "stockout_rate": 0.0219,
+     "lost_units": 96,
+     "demand_units": 10293
+    },
+    {
+     "week_end": "2025-04-20",
+     "stockout_rate": 0.024,
+     "lost_units": 110,
+     "demand_units": 10285
+    },
+    {
+     "week_end": "2025-04-27",
+     "stockout_rate": 0.0246,
+     "lost_units": 96,
+     "demand_units": 10285
+    },
+    {
+     "week_end": "2025-05-04",
+     "stockout_rate": 0.0288,
+     "lost_units": 164,
+     "demand_units": 10824
+    },
+    {
+     "week_end": "2025-05-11",
+     "stockout_rate": 0.0579,
+     "lost_units": 735,
+     "demand_units": 16392
+    },
+    {
+     "week_end": "2025-05-18",
+     "stockout_rate": 0.0529,
+     "lost_units": 383,
+     "demand_units": 11070
+    },
+    {
+     "week_end": "2025-05-25",
+     "stockout_rate": 0.0169,
+     "lost_units": 68,
+     "demand_units": 11203
+    },
+    {
+     "week_end": "2025-06-01",
+     "stockout_rate": 0.0149,
+     "lost_units": 42,
+     "demand_units": 11105
+    },
+    {
+     "week_end": "2025-06-08",
+     "stockout_rate": 0.0207,
+     "lost_units": 66,
+     "demand_units": 11402
+    },
+    {
+     "week_end": "2025-06-15",
+     "stockout_rate": 0.0196,
+     "lost_units": 70,
+     "demand_units": 11496
+    },
+    {
+     "week_end": "2025-06-22",
+     "stockout_rate": 0.0181,
+     "lost_units": 82,
+     "demand_units": 11436
+    },
+    {
+     "week_end": "2025-06-29",
+     "stockout_rate": 0.0209,
+     "lost_units": 70,
+     "demand_units": 11519
+    },
+    {
+     "week_end": "2025-07-06",
+     "stockout_rate": 0.0223,
+     "lost_units": 73,
+     "demand_units": 11815
+    },
+    {
+     "week_end": "2025-07-13",
+     "stockout_rate": 0.0235,
+     "lost_units": 52,
+     "demand_units": 11721
+    },
+    {
+     "week_end": "2025-07-20",
+     "stockout_rate": 0.0229,
+     "lost_units": 85,
+     "demand_units": 11598
+    },
+    {
+     "week_end": "2025-07-27",
+     "stockout_rate": 0.024,
+     "lost_units": 68,
+     "demand_units": 11730
+    },
+    {
+     "week_end": "2025-08-03",
+     "stockout_rate": 0.0241,
+     "lost_units": 51,
+     "demand_units": 11665
+    },
+    {
+     "week_end": "2025-08-10",
+     "stockout_rate": 0.0233,
+     "lost_units": 81,
+     "demand_units": 11576
+    },
+    {
+     "week_end": "2025-08-17",
+     "stockout_rate": 0.0225,
+     "lost_units": 82,
+     "demand_units": 12823
+    },
+    {
+     "week_end": "2025-08-24",
+     "stockout_rate": 0.0254,
+     "lost_units": 97,
+     "demand_units": 13601
+    },
+    {
+     "week_end": "2025-08-31",
+     "stockout_rate": 0.0265,
+     "lost_units": 99,
+     "demand_units": 13433
+    },
+    {
+     "week_end": "2025-09-07",
+     "stockout_rate": 0.0363,
+     "lost_units": 187,
+     "demand_units": 12004
+    },
+    {
+     "week_end": "2025-09-14",
+     "stockout_rate": 0.0473,
+     "lost_units": 254,
+     "demand_units": 11925
+    },
+    {
+     "week_end": "2025-09-21",
+     "stockout_rate": 0.032,
+     "lost_units": 118,
+     "demand_units": 11990
+    },
+    {
+     "week_end": "2025-09-28",
+     "stockout_rate": 0.0249,
+     "lost_units": 98,
+     "demand_units": 11936
+    },
+    {
+     "week_end": "2025-10-05",
+     "stockout_rate": 0.0254,
+     "lost_units": 100,
+     "demand_units": 10669
+    },
+    {
+     "week_end": "2025-10-12",
+     "stockout_rate": 0.0226,
+     "lost_units": 66,
+     "demand_units": 10133
+    },
+    {
+     "week_end": "2025-10-19",
+     "stockout_rate": 0.0255,
+     "lost_units": 85,
+     "demand_units": 10111
+    },
+    {
+     "week_end": "2025-10-26",
+     "stockout_rate": 0.0263,
+     "lost_units": 88,
+     "demand_units": 10304
+    },
+    {
+     "week_end": "2025-11-02",
+     "stockout_rate": 0.028,
+     "lost_units": 103,
+     "demand_units": 11022
+    },
+    {
+     "week_end": "2025-11-09",
+     "stockout_rate": 0.0419,
+     "lost_units": 371,
+     "demand_units": 12681
+    },
+    {
+     "week_end": "2025-11-16",
+     "stockout_rate": 0.04,
+     "lost_units": 290,
+     "demand_units": 12642
+    },
+    {
+     "week_end": "2025-11-23",
+     "stockout_rate": 0.0248,
+     "lost_units": 114,
+     "demand_units": 12831
+    },
+    {
+     "week_end": "2025-11-30",
+     "stockout_rate": 0.0392,
+     "lost_units": 351,
+     "demand_units": 24499
+    },
+    {
+     "week_end": "2025-12-07",
+     "stockout_rate": 0.0676,
+     "lost_units": 491,
+     "demand_units": 13621
+    },
+    {
+     "week_end": "2025-12-14",
+     "stockout_rate": 0.012,
+     "lost_units": 52,
+     "demand_units": 18357
+    },
+    {
+     "week_end": "2025-12-21",
+     "stockout_rate": 0.026,
+     "lost_units": 169,
+     "demand_units": 26914
+    },
+    {
+     "week_end": "2025-12-28",
+     "stockout_rate": 0.0471,
+     "lost_units": 392,
+     "demand_units": 18408
+    },
+    {
+     "week_end": "2025-12-31",
+     "stockout_rate": 0.0082,
+     "lost_units": 3,
+     "demand_units": 4657
+    }
+   ]
+  }
+ },
+ "size_curve": [
+  {
+   "size": "XS",
+   "demand_share": 0.06,
+   "stock_share": 0.2324,
+   "stockout_rate": 0.0039
+  },
+  {
+   "size": "S",
+   "demand_share": 0.1807,
+   "stock_share": 0.1454,
+   "stockout_rate": 0.0453
+  },
+  {
+   "size": "M",
+   "demand_share": 0.2998,
+   "stock_share": 0.1056,
+   "stockout_rate": 0.1306
+  },
+  {
+   "size": "L",
+   "demand_share": 0.2591,
+   "stock_share": 0.1175,
+   "stockout_rate": 0.0994
+  },
+  {
+   "size": "XL",
+   "demand_share": 0.1402,
+   "stock_share": 0.1662,
+   "stockout_rate": 0.0254
+  },
+  {
+   "size": "XXL",
+   "demand_share": 0.0603,
+   "stock_share": 0.2328,
+   "stockout_rate": 0.0037
+  }
+ ],
+ "summary": {
+  "even_split": {
+   "stockout_rate": 0.0552,
+   "fill_rate": 0.95,
+   "avg_inventory_units": 44304.6,
+   "lost_units": 37247.3333,
+   "stockout_rate_M": 0.1286,
+   "stockout_rate_XS": 0.0036,
+   "lost_units_vs_current": 0.0,
+   "inventory_vs_current": 0.0
+  },
+  "size_curve": {
+   "stockout_rate": 0.0381,
+   "fill_rate": 0.9765,
+   "avg_inventory_units": 43149.3333,
+   "lost_units": 17501.6667,
+   "stockout_rate_M": 0.0368,
+   "stockout_rate_XS": 0.0379,
+   "lost_units_vs_current": -0.53,
+   "inventory_vs_current": -0.026
+  },
+  "size_aware": {
+   "stockout_rate": 0.0348,
+   "fill_rate": 0.9784,
+   "avg_inventory_units": 44479.9,
+   "lost_units": 16134.6667,
+   "stockout_rate_M": 0.0334,
+   "stockout_rate_XS": 0.0347,
+   "lost_units_vs_current": -0.567,
+   "inventory_vs_current": 0.004
+  }
+ },
+ "measured": {
+  "forecast_wape": [
+   {
+    "level": "store_sku",
+    "model": 0.48,
+    "naive_last_week": 0.62,
+    "naive_roll_4": 0.52
+   },
+   {
+    "level": "store_model_color",
+    "model": 0.27,
+    "naive_last_week": 0.4,
+    "naive_roll_4": 0.33
+   },
+   {
+    "level": "country_category",
+    "model": 0.16,
+    "naive_last_week": 0.32,
+    "naive_roll_4": 0.26
+   }
+  ],
+  "lost_sales_estimator_error": {
+   "first_version": 0.6,
+   "final": 0.08
+  },
+  "genie_benchmarks": {
+   "iterations": [
+    6,
+    9,
+    10,
+    12
+   ],
+   "total": 12
+  },
+  "tests": 47
+ }
+}

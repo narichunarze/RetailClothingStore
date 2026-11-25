@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Size-Curve Stockouts · Databricks Case Study</title>
+  <meta name="description" content="End-to-end Databricks case study: a clothing retailer loses sales to size-curve stockouts. Lakehouse, data quality, demand forecast, replenishment backtest and a Genie agent.">
+  <meta property="og:title" content="Size-Curve Stockouts · Databricks Case Study">
+  <meta property="og:description" content="Same inventory, 57% fewer lost sales. An end-to-end forward-deployed engineering case study on Databricks.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23257de0'/><rect x='7' y='16' width='4' height='9' rx='1.5' fill='white'/><rect x='14' y='9' width='4' height='16' rx='1.5' fill='white'/><rect x='21' y='13' width='4' height='12' rx='1.5' fill='white'/></svg>">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#top">AndesMart<span> · case study</span></a>
+      <nav class="topnav" aria-label="Sections">
+        <a href="#finding" data-i18n="nav.finding">Finding</a>
+        <a href="#simulator" data-i18n="nav.simulator">Simulator</a>
+        <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
+        <a href="#results" data-i18n="nav.results">Results</a>
+      </nav>
+      <div class="controls">
+        <button class="chip-btn" id="lang-toggle" type="button" aria-label="Cambiar idioma / Change language">ES</button>
+        <button class="chip-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero wrap">
+      <p class="eyebrow" data-i18n="hero.eyebrow">Forward-deployed engineering · Databricks</p>
+      <h1 data-i18n="hero.title">Same inventory, <em>57% fewer</em> lost sales.</h1>
+      <p class="lede" data-i18n="hero.lede">A clothing retailer kept running out of sizes M and L while discounting XS and XXL. I took it from discovery to production on Databricks: a governed lakehouse, data-quality gates, a demand forecast, a replenishment policy and a Genie agent that answers in Spanish.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="https://github.com/narichunarze/RetailClothingStore" data-i18n="hero.repo">View the code on GitHub</a>
+        <a class="btn" href="#simulator" data-i18n="hero.try">Try the simulator ↓</a>
+      </div>
+      <p class="disclaimer" data-i18n="hero.disclaimer">Simulated client and synthetic data, engineered like a real engagement.</p>
+
+      <div class="stats" role="list">
+        <div class="stat" role="listitem"><span class="stat-num" id="stat-lost">−57%</span><span class="stat-label" data-i18n="stat.lost">lost sales, same inventory</span></div>
+        <div class="stat" role="listitem"><span class="stat-num" id="stat-m">13% → 3%</span><span class="stat-label" data-i18n="stat.m">stockout rate in size M</span></div>
+        <div class="stat" role="listitem"><span class="stat-num">60% → 8%</span><span class="stat-label" data-i18n="stat.est">lost-sales estimator error, after debugging</span></div>
+        <div class="stat" role="listitem"><span class="stat-num">12/12</span><span class="stat-label" data-i18n="stat.genie">Genie benchmark questions</span></div>
+      </div>
+    </section>
+
+    <!-- PROBLEM -->
+    <section class="section wrap" id="problem">
+      <div class="two-col">
+        <div>
+          <p class="kicker">01</p>
+          <h2 data-i18n="problem.title">The problem</h2>
+          <blockquote data-i18n="problem.quote">“We run out of M and L on our best sellers, and end the season discounting XS and XL by 50%. We find out too late.”</blockquote>
+          <p class="muted" data-i18n="problem.who">Head of Operations (simulated)</p>
+        </div>
+        <ul class="facts">
+          <li><strong>12</strong> <span data-i18n="problem.f1">stores in Peru, Chile, Colombia and Mexico</span></li>
+          <li><strong>~760</strong> <span data-i18n="problem.f2">SKUs (model × color × size)</span></li>
+          <li><strong>8 h/week</strong> <span data-i18n="problem.f3">of manual Excel consolidation</span></li>
+          <li><strong>0</strong> <span data-i18n="problem.f4">demand forecasts; weekly replenishment “by eye”</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FINDING -->
+    <section class="section wrap" id="finding">
+      <p class="kicker">02</p>
+      <h2 data-i18n="finding.title">The finding: it's the size curve, not the volume</h2>
+      <p class="section-lede" data-i18n="finding.lede">The planner splits every order evenly across sizes. Demand isn't even: M and L make up more than half of it, yet each gets the same share of stock as XS.</p>
+      <figure class="card chart-card">
+        <figcaption>
+          <h3 data-i18n="finding.chart">Share of demand vs. share of stock, by size (apparel)</h3>
+          <div class="legend" id="legend-finding"></div>
+        </figcaption>
+        <div class="chart-box"><canvas id="chart-finding" role="img" aria-label="Share of demand versus share of stock by size"></canvas></div>
+        <details class="table-view"><summary data-i18n="common.table">View as table</summary><div id="table-finding"></div></details>
+      </figure>
+    </section>
+
+    <!-- SIMULATOR -->
+    <section class="section wrap" id="simulator">
+      <p class="kicker">03</p>
+      <h2 data-i18n="sim.title">Replenishment simulator</h2>
+      <p class="section-lede" data-i18n="sim.lede">The same year, with exactly the same customer demand, replayed under three replenishment policies. Pick one and compare it with today's practice.</p>
+
+      <div class="segmented" role="radiogroup" aria-label="Replenishment policy" id="policy-picker">
+        <button type="button" role="radio" data-policy="even_split" aria-checked="false"><span class="dot s-current"></span><span data-i18n="policy.even_split">Even split (today)</span></button>
+        <button type="button" role="radio" data-policy="size_curve" aria-checked="false"><span class="dot s-curve"></span><span data-i18n="policy.size_curve">Size curve</span></button>
+        <button type="button" role="radio" data-policy="size_aware" aria-checked="true"><span class="dot s-solution"></span><span data-i18n="policy.size_aware">Size curve + uncensored demand</span></button>
+      </div>
+      <p class="policy-desc" id="policy-desc"></p>
+
+      <div class="kpis" id="kpis"></div>
+
+      <div class="grid-2">
+        <figure class="card chart-card">
+          <figcaption>
+            <h3 data-i18n="sim.bySize">Stockout rate by size</h3>
+            <div class="legend" id="legend-size"></div>
+          </figcaption>
+          <div class="chart-box"><canvas id="chart-size" role="img" aria-label="Stockout rate by size"></canvas></div>
+          <details class="table-view"><summary data-i18n="common.table">View as table</summary><div id="table-size"></div></details>
+        </figure>
+        <figure class="card chart-card">
+          <figcaption>
+            <h3 data-i18n="sim.weekly">Weekly stockout rate over the year</h3>
+            <div class="legend" id="legend-weekly"></div>
+          </figcaption>
+          <div class="chart-box"><canvas id="chart-weekly" role="img" aria-label="Weekly stockout rate"></canvas></div>
+          <details class="table-view"><summary data-i18n="common.table">View as table</summary><div id="table-weekly"></div></details>
+        </figure>
+      </div>
+      <p class="note" data-i18n="sim.note">Counterfactual backtest on the project's simulator: 1 year, 12 stores; KPIs averaged over 3 random seeds, charts from seed 42. Stockout = SKU with demand in the last 14 days that closes the day with no stock.</p>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section class="section wrap" id="architecture">
+      <p class="kicker">04</p>
+      <h2 data-i18n="arch.title">How it's built</h2>
+      <p class="section-lede" data-i18n="arch.lede">Everything runs on Databricks, deployed as code from GitHub.</p>
+      <ol class="flow">
+        <li class="flow-step"><span class="flow-tag">Sources</span><strong data-i18n="arch.s1">POS & ERP files, weather, holidays</strong><span data-i18n="arch.s1d">Synthetic generator + Open-Meteo and Nager.Date APIs</span></li>
+        <li class="flow-step"><span class="flow-tag">Bronze</span><strong>Auto Loader</strong><span data-i18n="arch.s2d">Incremental ingestion, everything as raw strings, nothing lost</span></li>
+        <li class="flow-step"><span class="flow-tag">Silver</span><strong data-i18n="arch.s3">Expectations + quarantine</strong><span data-i18n="arch.s3d">Bad rows kept with the reason they failed</span></li>
+        <li class="flow-step"><span class="flow-tag">Gold</span><strong data-i18n="arch.s4">Stockouts & lost sales</strong><span data-i18n="arch.s4d">Daily stockouts, weekly KPIs, size curve, estimated lost sales</span></li>
+        <li class="flow-step gate"><span class="flow-tag">Gate</span><strong>Quality gate</strong><span data-i18n="arch.s5d">Stops the job if quarantine &gt; 1% or a table is empty</span></li>
+        <li class="flow-step"><span class="flow-tag">ML</span><strong>MLflow + Unity Catalog</strong><span data-i18n="arch.s6d">Weekly forecast; promoted to “champion” only if it beats the baseline</span></li>
+        <li class="flow-step"><span class="flow-tag">AI</span><strong>Genie agent</strong><span data-i18n="arch.s7d">Spanish semantic views with a business definition for every column</span></li>
+      </ol>
+      <div class="tags" aria-label="Technologies">
+        <span>Lakeflow Declarative Pipelines</span><span>Delta Lake</span><span>Unity Catalog</span><span>Lakeflow Jobs</span><span>MLflow</span><span>Genie</span><span>Asset Bundles</span><span>GitHub Actions</span><span>PySpark</span><span>scikit-learn</span><span>pytest</span>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="section wrap" id="results">
+      <p class="kicker">05</p>
+      <h2 data-i18n="res.title">Results</h2>
+      <div class="grid-2">
+        <figure class="card chart-card">
+          <figcaption>
+            <h3 data-i18n="res.wape">Forecast error (WAPE, lower is better)</h3>
+            <div class="legend" id="legend-wape"></div>
+          </figcaption>
+          <div class="chart-box"><canvas id="chart-wape" role="img" aria-label="Forecast WAPE by aggregation level"></canvas></div>
+          <details class="table-view"><summary data-i18n="common.table">View as table</summary><div id="table-wape"></div></details>
+        </figure>
+        <div class="result-list">
+          <div class="card result">
+            <h3 data-i18n="res.est">Lost-sales estimator validated against ground truth</h3>
+            <p data-i18n="res.estd">The first version overestimated by 60%: inventory snapshots are end-of-day, so a SKU that sold out mid-day counted as a full lost day. After the fix it's within ~8% of the truth.</p>
+          </div>
+          <div class="card result">
+            <h3 data-i18n="res.genie">Genie agent: 6 → 9 → 10 → 12 out of 12</h3>
+            <p data-i18n="res.genied">Half of the early failures were in my reference SQL, not in the agent. Business definitions were written into the instructions, so the score didn't come from overfitting to the benchmark.</p>
+          </div>
+          <div class="card result">
+            <h3 data-i18n="res.train">Trained on uncensored demand</h3>
+            <p data-i18n="res.traind">Sales are censored on stockout days. The model learns from sales plus estimated lost sales, otherwise it would under-forecast exactly the sizes that run out.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI FIRST -->
+    <section class="section wrap" id="ai">
+      <p class="kicker">06</p>
+      <h2 data-i18n="ai.title">AI-first, with judgment</h2>
+      <p class="section-lede" data-i18n="ai.lede">Built with Claude Code. Every AI-generated piece was checked with tests and validated against ground truth. Some of what that caught:</p>
+      <div class="grid-4">
+        <article class="card bug"><h3 data-i18n="ai.b1">Stockout death spiral</h3><p data-i18n="ai.b1d">The first replenishment simulation reordered from already-censored sales. Lost demand was 3× actual sales.</p></article>
+        <article class="card bug"><h3 data-i18n="ai.b2">Inflated lost sales</h3><p data-i18n="ai.b2d">The estimator was 60% too high. Validating it against the generator's ground truth exposed the end-of-day snapshot issue.</p></article>
+        <article class="card bug"><h3 data-i18n="ai.b3">Decimal → pandas</h3><p data-i18n="ai.b3d">Spark decimals became Python Decimal objects and broke the forecast math. Caught in a local end-to-end run, before production.</p></article>
+        <article class="card bug"><h3 data-i18n="ai.b4">Production I/O errors</h3><p data-i18n="ai.b4d">Jobs intermittently failed to read code from the workspace. Fixed by shipping it as a versioned wheel from a Unity Catalog volume.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p data-i18n="footer.text">Portfolio project · simulated client, synthetic data.</p>
+      <p><a href="https://github.com/narichunarze/RetailClothingStore">GitHub</a> · <a href="https://github.com/narichunarze/RetailClothingStore/blob/main/AI_LOG.md">AI log</a> · <a href="https://github.com/narichunarze/RetailClothingStore/tree/main/docs/adr">ADRs</a></p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

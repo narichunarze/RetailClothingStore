@@ -211,6 +211,11 @@ def simulate(out: Path | None, truth: Path | None, start: dt.date, days: int, n_
     on_hand_sum = 0.0
     stockout_days = np.zeros(P)
     active_days = np.zeros(P)
+    sold_by_pair = np.zeros(P)
+    lost_by_pair = np.zeros(P)
+    on_hand_by_pair = np.zeros(P)
+    weekly: list[dict] = []
+    week_acc = {"active": 0.0, "stockout": 0.0, "lost": 0.0, "demand": 0.0}
     returns_buffer: list[pd.DataFrame] = []
     pending_dupes: pd.DataFrame | None = None
     lost_rows = []
@@ -339,6 +344,21 @@ def simulate(out: Path | None, truth: Path | None, start: dt.date, days: int, n_
         active_days += active
         stockout_days += active & (on_hand <= 0)
         on_hand_sum += float(np.maximum(on_hand, 0).sum())
+        sold_by_pair += sales
+        lost_by_pair += lost
+        on_hand_by_pair += np.maximum(on_hand, 0)
+        week_acc["active"] += float(active.sum())
+        week_acc["stockout"] += float((active & (on_hand <= 0)).sum())
+        week_acc["lost"] += float(lost.sum())
+        week_acc["demand"] += float(demand.sum())
+        if d.weekday() == 6 or t == len(dates) - 1:  # cierre de semana (domingo)
+            weekly.append({
+                "week_end": ds,
+                "stockout_rate": round(week_acc["stockout"] / max(week_acc["active"], 1), 4),
+                "lost_units": int(week_acc["lost"]),
+                "demand_units": int(week_acc["demand"]),
+            })
+            week_acc = dict.fromkeys(week_acc, 0.0)
 
         # 7) verdad de terreno: demanda perdida
         if truth is not None and lost.any():
@@ -364,6 +384,14 @@ def simulate(out: Path | None, truth: Path | None, start: dt.date, days: int, n_
         stockout_rate_by_size={s: round(float(stockout_days[sizes == s].sum()
                                               / max(active_days[sizes == s].sum(), 1)), 4)
                                for s in pd.unique(sizes)},
+        by_size={s: {
+            "units_sold": int(sold_by_pair[sizes == s].sum()),
+            "lost_units": int(lost_by_pair[sizes == s].sum()),
+            "avg_on_hand": round(float(on_hand_by_pair[sizes == s].sum() / days), 1),
+            "stockout_rate": round(float(stockout_days[sizes == s].sum()
+                                         / max(active_days[sizes == s].sum(), 1)), 4),
+        } for s in pd.unique(sizes)},
+        weekly=weekly,
     )
     return stats
 
