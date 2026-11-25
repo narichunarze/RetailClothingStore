@@ -14,10 +14,12 @@ La última tarea del job (`semantic_layer`) crea estas vistas en español. Tanto
 
 > ¿Por qué vistas y no las tablas Gold directo? Genie acierta más con nombres y definiciones de negocio. La vista además fija reglas que una IA suele equivocar, por ejemplo "para agregar la tasa de quiebre, sumar numerador y denominador; no promediar tasas".
 
-## Crear el Genie space (UI, ~10 min)
+## Crear el Genie Agent (UI, ~10 min)
 
-1. Databricks → **Genie → New**.
-2. **Data:** agrega las 5 vistas de `workspace.andesmart_dev` (o de `andesmart_prod`).
+> Desde julio de 2026, los *Genie Spaces* se llaman **Genie Agents**.
+
+1. Databricks → **Genie Agents → New**. Si pide un SQL warehouse, usa el serverless por defecto.
+2. **Data sources:** agrega las 5 vistas de `workspace.andesmart_prod` (o de `andesmart_dev`) → **Create**. Genie Code se abre y sugiere contexto: revísalo, pero pega igualmente las instrucciones de abajo.
 3. **Title:** `AndesMart · Stock y ventas`. **Description:** "Pregunta en español sobre quiebres de stock, ventas, curva de tallas y reposición sugerida."
 4. **Instructions → General instructions:** pega el bloque de abajo.
 5. **Instructions → SQL queries:** agrega 3 o 4 de los SQL de referencia (por ejemplo el 1, 4, 6 y 9) como ejemplos.
