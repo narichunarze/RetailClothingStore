@@ -10,7 +10,8 @@ Simulación de un engagement de **Forward Deployed Engineer** completo: discover
 2. [Arquitectura](docs/02-architecture.md)
 3. [Decisiones (ADRs)](docs/adr/)
 4. [Plan de trabajo](docs/03-plan.md)
-5. [AI Log](AI_LOG.md)
+5. [Datos fuente](docs/04-source-data.md)
+6. [AI Log](AI_LOG.md)
 
 ## Stack
 Databricks Free Edition · Lakeflow Declarative Pipelines · Auto Loader · Delta Lake · Unity Catalog · Lakeflow Jobs · MLflow · AI/BI Dashboards · Genie · Databricks Asset Bundles · GitHub Actions · PySpark · SQL
@@ -38,4 +39,4 @@ databricks bundle deploy -t dev
 ```
 
 ## Estado
-🚧 Fase 0 — planeamiento completo. Ver [plan](docs/03-plan.md).
+🚧 Fase 1 — generador de datos listo; falta subirlo a Databricks. Ver [plan](docs/03-plan.md).

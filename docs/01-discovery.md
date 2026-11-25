@@ -57,7 +57,7 @@
 
 | KPI | Línea base (simulada) | Meta fase 1 |
 |---|---|---|
-| Tasa de quiebre de stock (SKU-tienda-días) | ~8% | Visible diariamente; meta de negocio < 5% |
+| Tasa de quiebre de stock (SKU-tienda-días) | ~4,5% global; ~12% en talla M | Visible diariamente; meta de negocio < 3% global y < 6% en tallas centrales |
 | % de venta en rebaja al cierre de temporada | ~35% | Visible por categoría/talla |
 | Tiempo de consolidación semanal | ~8 h manuales | 0 h (automático) |
 | Error de forecast (WAPE, 7 días) | N/A (no hay forecast) | < 35% vs. baseline naive |

@@ -10,9 +10,10 @@ Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 - **Demo:** `databricks bundle validate` pasa
 
 ## Fase 1 · Datos fuente (1 día) — US-01
-- [ ] `src/data_gen/generate.py`: productos (modelo × talla × color), tiendas, ventas diarias (temporadas, curva de tallas, efecto clima/feriados, quiebres), devoluciones e inventario
-- [ ] Inyectar problemas de calidad a propósito (duplicados, precios negativos, nulos)
-- [ ] Ingesta de Open-Meteo (clima) y Nager.Date (feriados) al volume
+- [x] `src/data_gen/generate.py`: productos (modelo × talla × color), tiendas, ventas diarias (temporadas, curva de tallas, efecto clima/feriados, quiebres), devoluciones e inventario
+- [x] Inyectar problemas de calidad a propósito (duplicados, precios negativos, nulos)
+- [x] Script de ingesta de Open-Meteo (clima) y Nager.Date (feriados) (`ingest_external.py`)
+- [ ] Ejecutar ingesta externa + generación completa y subir al volume (ver `docs/04-source-data.md`)
 - **Demo:** archivos crudos en `/Volumes/.../raw/`
 
 ## Fase 2 · Bronze + Silver (1½ días) — US-01
