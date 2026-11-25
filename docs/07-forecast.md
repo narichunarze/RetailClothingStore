@@ -28,7 +28,7 @@ Cómo interpretarlo:
 | Tienda × modelo-color | 0,32 | **0,27** | 0,33 |
 | País × categoría | 0,25 | **0,16** | 0,26 |
 
-Con dos años, el sesgo del modelo sube a +8% (sobreestima un poco), lo que en reposición se traduce en algo más de stock de seguridad. Para el retail de ropa es preferible a subestimar. Se generan con `--start 2024-01-01 --days 731` (ver `docs/04-source-data.md`).
+Con dos años, el sesgo del modelo sube a +8% (sobreestima un poco). Conviene vigilarlo: en ropa, sobreestimar termina en rebajas, que es justo el otro dolor del cliente. Si persiste, se corrige calibrando las predicciones o bajando el factor de seguridad. Se generan con `--start 2024-01-01 --days 731` (ver `docs/04-source-data.md`).
 
 ## Reposición (`src/ml/replenishment.py`)
 
