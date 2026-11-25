@@ -18,6 +18,9 @@ resources:
             pipeline_id: ${resources.pipelines.andesmart_medallion.id}
 
         - task_key: quality_gate
+          # reintento ante fallos transitorios (p. ej. I/O del workspace)
+          max_retries: 1
+          min_retry_interval_millis: 60000
           depends_on:
             - task_key: refresh_medallion
           notebook_task:
@@ -28,8 +31,13 @@ resources:
               bundle_root: ${workspace.file_path}
 
         - task_key: forecast
+          max_retries: 1
+          min_retry_interval_millis: 60000
           depends_on:
             - task_key: quality_gate
+          # reintento ante fallos transitorios (p. ej. I/O del workspace)
+          max_retries: 1
+          min_retry_interval_millis: 60000
           notebook_task:
             notebook_path: ../src/jobs/forecast.py
             base_parameters:
@@ -39,8 +47,12 @@ resources:
               test_weeks: "8"
 
         - task_key: semantic_layer
+          max_retries: 1
+          min_retry_interval_millis: 60000
           depends_on:
             - task_key: forecast
+          max_retries: 1
+          min_retry_interval_millis: 60000
           notebook_task:
             notebook_path: ../src/jobs/semantic_layer.py
             base_parameters:
