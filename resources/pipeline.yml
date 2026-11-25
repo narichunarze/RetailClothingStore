@@ -8,7 +8,7 @@ resources:
       photon: true
       channel: CURRENT
       configuration:
-        raw_path: /Volumes/${var.catalog}/${var.schema}/raw
+        raw_path: ${var.raw_path}
         # Carpeta donde el bundle sincroniza el repo; permite `from src import transforms`.
         bundle_root: ${workspace.file_path}
       libraries:

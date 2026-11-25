@@ -12,7 +12,8 @@ Simulación de un engagement de **Forward Deployed Engineer** completo: discover
 4. [Plan de trabajo](docs/03-plan.md)
 5. [Datos fuente](docs/04-source-data.md)
 6. [Dashboard](docs/05-dashboard.md)
-7. [AI Log](AI_LOG.md)
+7. [Orquestación y CI/CD](docs/06-cicd.md)
+8. [AI Log](AI_LOG.md)
 
 ## Stack
 Databricks Free Edition · Lakeflow Declarative Pipelines · Auto Loader · Delta Lake · Unity Catalog · Lakeflow Jobs · MLflow · AI/BI Dashboards · Genie · Databricks Asset Bundles · GitHub Actions · PySpark · SQL

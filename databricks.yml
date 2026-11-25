@@ -9,8 +9,16 @@ variables:
     description: Unity Catalog catalog
     default: workspace
   schema:
-    description: Target schema per environment
+    description: Schema destino por entorno
     default: andesmart_dev
+  raw_path:
+    description: >
+      Landing zone con los archivos crudos. En Free Edition dev y prod leen la misma;
+      con un cliente real cada entorno tendría la suya.
+    default: /Volumes/workspace/andesmart_dev/raw
+  schedule_status:
+    description: PAUSED o UNPAUSED para el job diario
+    default: PAUSED
 
 targets:
   dev:
@@ -21,5 +29,12 @@ targets:
 
   prod:
     mode: production
+    workspace:
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
+    permissions:
+      - user_name: ${workspace.current_user.userName}
+        level: CAN_MANAGE
     variables:
       schema: andesmart_prod
+      # Free Edition tiene cuota: dejarlo en PAUSED y correr a mano; UNPAUSED para diario.
+      schedule_status: PAUSED

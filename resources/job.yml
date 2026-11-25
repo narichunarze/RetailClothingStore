@@ -2,15 +2,31 @@ resources:
   jobs:
     andesmart_daily:
       name: andesmart-daily-${var.schema}
+      description: Refresco diario del lakehouse + quality gate.
       schedule:
         quartz_cron_expression: "0 0 6 * * ?"
         timezone_id: America/Lima
-        pause_status: PAUSED
+        # En target dev el bundle pausa los schedules automáticamente.
+        pause_status: ${var.schedule_status}
+      email_notifications:
+        on_failure:
+          - ${workspace.current_user.userName}
+      max_concurrent_runs: 1
       tasks:
         - task_key: refresh_medallion
           pipeline_task:
             pipeline_id: ${resources.pipelines.andesmart_medallion.id}
+
+        - task_key: quality_gate
+          depends_on:
+            - task_key: refresh_medallion
+          notebook_task:
+            notebook_path: ../src/jobs/quality_gate.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              bundle_root: ${workspace.file_path}
+
         # Fase 5: forecast y reposición
         # - task_key: forecast
-        #   depends_on: [{task_key: refresh_medallion}]
-        #   spark_python_task: {python_file: ../src/ml/forecast.py}
+        #   depends_on: [{task_key: quality_gate}]
