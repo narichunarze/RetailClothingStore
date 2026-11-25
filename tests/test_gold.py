@@ -2,12 +2,10 @@
 
 import datetime as dt
 
-import pandas as pd
 import pytest
 from pyspark.sql import functions as F
 
 from src import transforms as T
-from src.data_gen.generate import simulate
 
 D = dt.date(2025, 1, 1)
 
@@ -61,31 +59,6 @@ def test_missing_and_negative_snapshots_are_forward_filled(spark, dims):
     assert rows[1].snapshot_missing and rows[1].on_hand == 5
     assert rows[2].on_hand == 5
     assert rows[3].on_hand == 4
-
-
-@pytest.fixture(scope="module")
-def medallion(spark, tmp_path_factory):
-    """Corre Silver + Gold localmente sobre 120 días generados."""
-    root = tmp_path_factory.mktemp("e2e")
-    simulate(root / "raw", root / "truth", D, 120, n_stores=3, n_models=8, seed=11)
-    raw = root / "raw"
-
-    def bronze(fmt, path, **o):
-        return (spark.read.format(fmt).options(**o).load(str(raw / path))
-                .withColumn("_ingested_at", F.current_timestamp()))
-
-    sales = T.dedupe_latest(
-        T.clean_sales(bronze("csv", "sales", header="true").withColumn("_source_file", F.lit("")))
-        .where(T.all_rules_pass(T.SALES_RULES)), ["transaction_id"])
-    returns = T.clean_returns(bronze("csv", "returns", header="true")
-                              .withColumn("_source_file", F.lit("")))
-    inv = T.clean_inventory(bronze("json", "inventory").withColumn("_source_file", F.lit("")))
-    products = T.clean_products(bronze("csv", "master/products.csv", header="true"))
-    stores = T.clean_stores(bronze("csv", "master/stores.csv", header="true"))
-    daily = T.daily_sales(sales, returns, products, stores).cache()
-    so = T.stockout_daily(inv, daily, products, stores).cache()
-    truth = pd.read_csv(root / "truth" / "lost_sales.csv.gz")
-    return daily, so, truth
 
 
 def test_central_sizes_are_undersupplied(medallion):

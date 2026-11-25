@@ -47,8 +47,9 @@ Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 - **Demo:** "estas 20 tallas/colores se quiebran esta semana en estas tiendas, envía X unidades"
 
 ## Fase 6 · Capa de IA para el negocio (1 día) — US-05
-- [ ] Genie space sobre tablas Gold con instrucciones y ejemplos de SQL
-- [ ] Set de 10 preguntas de evaluación (`docs/genie-eval.md`) y resultado
+- [x] Capa semántica: 5 vistas en español con comentarios por columna (tarea `semantic_layer` del job)
+- [x] Instrucciones de Genie, SQL de ejemplo y 10 benchmarks con SQL de referencia testeado (`docs/08-genie.md`)
+- [ ] Crear el Genie space en la UI y correr los benchmarks (meta ≥ 8/10)
 - [ ] (Opcional) Agente con herramientas (Agent Bricks / Mosaic AI Agent Framework) que explique la sugerencia de reposición
 - **Demo:** preguntas en español respondidas correctamente
 

@@ -2,7 +2,7 @@ resources:
   jobs:
     andesmart_daily:
       name: andesmart-daily-${var.schema}
-      description: Refresco diario del lakehouse, quality gate y forecast + reposición.
+      description: Refresco diario del lakehouse, quality gate, forecast + reposición y capa semántica para Genie.
       schedule:
         quartz_cron_expression: "0 0 6 * * ?"
         timezone_id: America/Lima
@@ -37,3 +37,13 @@ resources:
               schema: ${var.schema}
               bundle_root: ${workspace.file_path}
               test_weeks: "8"
+
+        - task_key: semantic_layer
+          depends_on:
+            - task_key: forecast
+          notebook_task:
+            notebook_path: ../src/jobs/semantic_layer.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              bundle_root: ${workspace.file_path}
