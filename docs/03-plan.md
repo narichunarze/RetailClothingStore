@@ -10,7 +10,7 @@ Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 - **Demo:** `databricks bundle validate` pasa
 
 ## Fase 1 · Datos fuente (1 día) — US-01
-- [ ] `src/data_gen/generate.py`: productos, tiendas, ventas diarias (con estacionalidad, efecto clima/feriados, quiebres) e inventario
+- [ ] `src/data_gen/generate.py`: productos (modelo × talla × color), tiendas, ventas diarias (temporadas, curva de tallas, efecto clima/feriados, quiebres), devoluciones e inventario
 - [ ] Inyectar problemas de calidad a propósito (duplicados, precios negativos, nulos)
 - [ ] Ingesta de Open-Meteo (clima) y Nager.Date (feriados) al volume
 - **Demo:** archivos crudos en `/Volumes/.../raw/`
@@ -37,7 +37,7 @@ Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 - [ ] Modelo (LightGBM o regresión con features de calendario/clima/lags), tracking en MLflow
 - [ ] Registrar modelo en Unity Catalog; batch inference a `gold_demand_forecast`
 - [ ] `gold_replenishment_suggestions`: días de cobertura y cantidad sugerida
-- **Demo:** "estos 20 SKUs se quiebran esta semana, pide X unidades"
+- **Demo:** "estas 20 tallas/colores se quiebran esta semana en estas tiendas, envía X unidades"
 
 ## Fase 6 · Capa de IA para el negocio (1 día) — US-05
 - [ ] Genie space sobre tablas Gold con instrucciones y ejemplos de SQL

@@ -1,9 +1,9 @@
-# AndesMart · Retail Lakehouse (simulación FDE en Databricks)
+# RetailClothingStore · Lakehouse para retail de ropa (simulación FDE en Databricks)
 
 Simulación de un engagement de **Forward Deployed Engineer** completo: discovery con el negocio → arquitectura → desarrollo AI-first → CI/CD → producción, en Databricks.
 
-**Problema:** una distribuidora retail pierde ventas por quiebres de stock y consolida reportes a mano.
-**Solución:** lakehouse medallion gobernado con Unity Catalog, KPIs de quiebre de stock, forecast de demanda con MLflow, sugerencias de reposición y una capa de preguntas en lenguaje natural (Genie).
+**Problema:** una cadena de tiendas de ropa pierde ventas por quiebres de tallas, liquida sobre-stock al final de temporada y consolida reportes a mano.
+**Solución:** lakehouse medallion gobernado con Unity Catalog, KPIs de quiebre de stock por talla, forecast de demanda con MLflow, sugerencias de reposición y una capa de preguntas en lenguaje natural (Genie).
 
 ## Documentación
 1. [Discovery: problema, stakeholders, user stories, KPIs](docs/01-discovery.md)
