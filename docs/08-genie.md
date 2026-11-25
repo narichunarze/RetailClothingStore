@@ -51,20 +51,36 @@ Al responder sobre tallas, recuerda el hallazgo principal: la reposición actual
 
 ## Evaluación
 
-| # | Pregunta | ¿Correcta? | Nota (qué falló / qué instrucción lo arregló) |
-|---|---|---|---|
-| 1 | ¿Cuál es la tasa de quiebre de stock general? | | |
-| 2 | ¿Qué talla de ropa tiene la mayor tasa de quiebre? | | |
-| 3 | ¿Qué país pierde más ventas por quiebres de stock? | | |
-| 4 | ¿Cuáles son las 5 tiendas con mayor tasa de quiebre en las últimas 4 semanas? | | |
-| 5 | ¿Cuánto vendimos en USD en noviembre por país? | | |
-| 6 | ¿En qué tallas de jeans falta stock respecto a lo que se vende? | | |
-| 7 | ¿Qué tiendas de Chile tienen más quiebres de talla M en jeans la última semana? | | |
-| 8 | ¿Cuántos SKUs están en riesgo de quiebre la próxima semana y cuántas unidades hay que enviar? | | |
-| 9 | ¿Cuántas unidades de talla M sugiere el modelo frente al reparto parejo? | | |
-| 10 | ¿Cómo evolucionó semana a semana la tasa de quiebre en Perú? | | |
+**Resultado final: 12/12 benchmarks aprobados** (los 10 de abajo y 2 agregados en la UI).
 
-**Resultado:** _/10
+| # | Pregunta | Resultado |
+|---|---|---|
+| 1 | ¿Cuál es la tasa de quiebre de stock general? | ✅ |
+| 2 | ¿Qué talla de ropa tiene la mayor tasa de quiebre? | ✅ |
+| 3 | ¿Qué país pierde más ventas por quiebres de stock? | ✅ |
+| 4 | ¿Cuáles son las 5 tiendas con mayor tasa de quiebre en las últimas 4 semanas? | ✅ |
+| 5 | ¿Cuánto vendimos en USD en noviembre por país? | ✅ |
+| 6 | ¿En qué tallas de jeans falta stock respecto a lo que se vende? | ✅ |
+| 7 | ¿Qué tiendas de Chile tienen más quiebres de talla M en jeans la última semana? | ✅ |
+| 8 | ¿Cuántos SKUs están en riesgo de quiebre la próxima semana y cuántas unidades hay que enviar? | ✅ |
+| 9 | ¿Cuántas unidades de talla M sugiere el modelo frente al reparto parejo? | ✅ |
+| 10 | ¿Cómo evolucionó semana a semana la tasa de quiebre en Perú? | ✅ |
+| 11 | ¿Cómo cambia el reparto de unidades por talla con la reposición sugerida frente al reparto parejo? | ✅ |
+| 12 | ¿Cuál es la tasa de quiebre de ropa por talla en las últimas 4 semanas? | ✅ |
+
+### Iteraciones (6 → 9 → 10 → 12)
+
+| Corrida | Puntaje | Qué falló | Corrección |
+|---|---|---|---|
+| 1 | 6/12 | `LIMIT 1` demasiado estricto en el SQL esperado; redondeo distinto; distintas interpretaciones de "SKUs en riesgo"; el agente agregó un filtro de calzado; error de infraestructura en una pregunta | Se relajó el SQL esperado cuando era demasiado estricto, se fijó una convención de redondeo y se dejó explícito el criterio |
+| 2 | 9/12 | Dos benchmarks quedaron sin SQL esperado (se borró el campo al editarlos); decimales y alias en "país" | Se restauró el SQL |
+| 3 | 10/12 | "SKUs en riesgo" y "país pierde más" | SQL de ejemplo exacto en *Instructions* y la misma convención de redondeo |
+| 4 | **12/12** | — | — |
+
+**Lecciones:**
+- Muchas fallas venían del **SQL de referencia**, no del agente: un benchmark mide lo que el SQL esperado exige, y un `LIMIT 1` o un redondeo fijo castigan respuestas correctas.
+- **Cuidado con sobreajustar.** Cuando se cambia la referencia para que coincida con el agente, hay que confirmar que la *definición de negocio* (por ejemplo, qué es un "SKU en riesgo") quedó escrita en las instrucciones y no solo en el benchmark.
+- 12/12 cubre estos 12 casos, no todas las preguntas posibles. Para ampliar la cobertura: recoger preguntas reales de usuarios y convertir las que fallen en benchmarks nuevos.
 
 ## SQL de referencia (benchmarks)
 
