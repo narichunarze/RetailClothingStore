@@ -6,9 +6,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# En PRs se cancela la corrida anterior; en main los deploys hacen cola. Cancelar un
+# `bundle deploy` a medias deja archivos a medio escribir en el workspace y el job que
+# corre en paralelo falla con "Input/output error" al importarlos.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test:

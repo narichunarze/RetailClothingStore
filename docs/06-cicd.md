@@ -26,7 +26,9 @@ flowchart LR
    Las reglas están en `src/quality.py` y se testean en `tests/test_quality.py`.
 3. (Fase 5) forecast y reposición: solo corren si pasa el gate.
 
-Si el job falla, avisa por email al dueño del bundle.
+Si el job falla, avisa por email al dueño del bundle. Las tareas de notebook reintentan una vez.
+
+> **Lección aprendida:** los deploys a `main` hacen cola en vez de cancelarse. Cancelar un `bundle deploy` a medias deja archivos incompletos en el workspace, y el job que corre en paralelo falla con `Input/output error`.
 
 ## Configuración en GitHub (una vez)
 
