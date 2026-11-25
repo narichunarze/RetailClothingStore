@@ -1,0 +1,12 @@
+resources:
+  pipelines:
+    andesmart_medallion:
+      name: andesmart-medallion-${var.schema}
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      serverless: true
+      configuration:
+        raw_path: /Volumes/${var.catalog}/${var.schema}/raw
+      libraries:
+        - glob:
+            include: ../src/pipelines/**

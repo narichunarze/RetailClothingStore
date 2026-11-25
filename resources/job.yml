@@ -1,0 +1,16 @@
+resources:
+  jobs:
+    andesmart_daily:
+      name: andesmart-daily-${var.schema}
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?"
+        timezone_id: America/Lima
+        pause_status: PAUSED
+      tasks:
+        - task_key: refresh_medallion
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.andesmart_medallion.id}
+        # Fase 5: forecast y reposición
+        # - task_key: forecast
+        #   depends_on: [{task_key: refresh_medallion}]
+        #   spark_python_task: {python_file: ../src/ml/forecast.py}

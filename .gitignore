@@ -1,0 +1,9 @@
+.databricks/
+__pycache__/
+*.pyc
+.venv/
+.env
+data/*
+!data/.gitkeep
+spark-warehouse/
+metastore_db/
