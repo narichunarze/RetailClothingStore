@@ -38,7 +38,7 @@ targets:
     default: true
     workspace:
       # Los artefactos (wheel) van a un Volume de UC, no al sistema de archivos del workspace.
-      artifact_path: /Volumes/workspace/andesmart_dev/artifacts
+      artifact_path: /Volumes/workspace/andesmart_dev/artifacts/${workspace.current_user.short_name}
     variables:
       schema: andesmart_dev
 
