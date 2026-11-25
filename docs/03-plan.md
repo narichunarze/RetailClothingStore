@@ -20,12 +20,13 @@ Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 - [x] Bronze con Auto Loader (`cloudFiles`, todo string + `_rescued_data`) y maestros/externos en batch
 - [x] Silver: tipos, dedupe, expectations (`expect_all_or_drop`, `expect_all`, `expect_or_fail`), cuarentena con motivo
 - [x] Funciones de limpieza puras en `src/transforms.py` con tests `pytest`
-- [ ] Desplegar y correr el pipeline en Databricks; revisar métricas de calidad y linaje
+- [x] Desplegar y correr el pipeline en Databricks; revisar métricas de calidad y linaje
 - **Demo:** pipeline verde + métricas de calidad visibles
 
 ## Fase 3 · Gold + Dashboard (1½ días) — US-02
-- [ ] `gold_daily_sales`, `gold_stockout_daily`, `gold_kpi_store_category`
-- [ ] AI/BI Dashboard: quiebres por país/tienda/categoría, tendencia, top SKUs perdidos
+- [x] `gold_daily_sales`, `gold_stockout_daily`, `gold_kpi_weekly`, `gold_size_curve`
+- [x] Estimación de venta perdida validada contra la verdad del generador (error ~8%)
+- [ ] AI/BI Dashboard (guía en `docs/05-dashboard.md`): quiebres por país/tienda/categoría/talla, tendencia, top SKUs perdidos
 - **Demo:** dashboard que responde "¿dónde perdemos ventas?"
 
 ## Fase 4 · Orquestación + CI/CD (1 día) — US-06

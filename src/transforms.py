@@ -155,3 +155,138 @@ def clean_holidays(df: DataFrame) -> DataFrame:
         F.col("localName").alias("holiday_name"),
         F.col("name").alias("holiday_name_en"),
     ).dropDuplicates(["country", "holiday_date"])
+
+
+# --------------------------------------------------------------------------- gold
+
+# Tipo de cambio fijo de presupuesto (moneda local por USD), igual que el generador.
+FX_TO_LOCAL = {"PEN": 3.7, "CLP": 950.0, "COP": 4000.0, "MXN": 18.0}
+LOOKBACK_DAYS = 28
+
+
+def _fx_col(currency_col: str = "currency") -> F.Column:
+    mapping = F.create_map(*[x for k, v in FX_TO_LOCAL.items() for x in (F.lit(k), F.lit(v))])
+    return mapping[F.col(currency_col)]
+
+
+def daily_sales(sales: DataFrame, returns: DataFrame, products: DataFrame,
+                stores: DataFrame) -> DataFrame:
+    """Ventas y devoluciones por día-tienda-SKU, con dimensiones y montos en USD."""
+    keys = ["date", "store_id", "sku"]
+    s = (sales.withColumnRenamed("sale_date", "date").groupBy(keys).agg(
+        F.sum("quantity").alias("units_sold"),
+        F.sum("net_amount").alias("net_sales_local"),
+        F.countDistinct("ticket_id").alias("tickets"),
+        F.avg("discount_pct").alias("avg_discount_pct"),
+    ))
+    r = (returns.withColumnRenamed("return_date", "date").groupBy(keys).agg(
+        F.sum("quantity").alias("units_returned"),
+        F.sum("refund_amount").alias("refunds_local"),
+    ))
+    zero = {"units_sold": 0, "net_sales_local": 0, "tickets": 0,
+            "units_returned": 0, "refunds_local": 0}
+    return (
+        s.join(r, keys, "full").fillna(zero)
+        .join(stores.select("store_id", "country", "city", "currency"), "store_id")
+        .join(products.select("sku", "model_id", "category", "season", "size", "color"), "sku")
+        .withColumn("net_units", F.col("units_sold") - F.col("units_returned"))
+        .withColumn("net_sales_usd",
+                    F.round((F.col("net_sales_local") - F.col("refunds_local")) / _fx_col(), 2))
+    )
+
+
+def stockout_daily(inventory: DataFrame, daily: DataFrame, products: DataFrame,
+                   stores: DataFrame, lookback: int = LOOKBACK_DAYS) -> DataFrame:
+    """Quiebre de stock por día-tienda-SKU.
+
+    - Completa días sin snapshot (o con `on_hand` negativo, dato inválido) con el último
+      valor conocido.
+    - SKU "activo" = tuvo venta en los `lookback` días previos. Quiebre = activo y on_hand <= 0.
+    - Venta perdida estimada = demanda diaria promedio de los días previos con stock, menos lo
+      que sí se vendió ese día (el snapshot es al cierre: el SKU pudo quebrarse a media jornada).
+      Validado contra la demanda real del generador en tests/test_gold.py.
+    """
+    inv = inventory.select(
+        F.col("snapshot_date").alias("date"), "store_id", "sku",
+        F.when(F.col("on_hand") >= 0, F.col("on_hand")).alias("on_hand_raw"),
+        "in_transit",
+    )
+    bounds = inv.agg(F.min("date").alias("lo"), F.max("date").alias("hi"))
+    dates = bounds.select(F.explode(F.sequence("lo", "hi")).alias("date"))
+    grid = inv.select("store_id", "sku").distinct().crossJoin(dates)
+
+    w = Window.partitionBy("store_id", "sku").orderBy("date")
+    day_n = F.datediff(F.col("date"), F.lit("2000-01-01"))
+    w_prev = (Window.partitionBy("store_id", "sku").orderBy(day_n)
+              .rangeBetween(-lookback, -1))
+
+    units = daily.select("date", "store_id", "sku", "units_sold")
+    df = (
+        grid.join(inv, ["date", "store_id", "sku"], "left")
+        .join(units, ["date", "store_id", "sku"], "left").fillna({"units_sold": 0})
+        .withColumn("snapshot_missing", F.col("on_hand_raw").isNull())
+        .withColumn("on_hand", F.last("on_hand_raw", ignorenulls=True).over(
+            w.rowsBetween(Window.unboundedPreceding, Window.currentRow)))
+        .withColumn("units_prev", F.sum("units_sold").over(w_prev))
+        # día "disponible" = cerró con stock o vendió algo (si vendió, hubo stock parte del día)
+        .withColumn("in_stock_days_prev",
+                    F.sum(F.when((F.col("on_hand") > 0) | (F.col("units_sold") > 0), 1)
+                          .otherwise(0)).over(w_prev))
+        .withColumn("is_active", F.coalesce(F.col("units_prev"), F.lit(0)) > 0)
+        .withColumn("is_stockout", F.col("is_active") & (F.col("on_hand") <= 0))
+        .withColumn("avg_daily_demand",
+                    F.col("units_prev") / F.greatest(F.col("in_stock_days_prev"), F.lit(1)))
+        # si se quebró durante el día, solo se pierde lo que faltó vender
+        .withColumn("lost_units_est",
+                    F.when(F.col("is_stockout"),
+                           F.greatest(F.col("avg_daily_demand") - F.col("units_sold"), F.lit(0.0)))
+                    .otherwise(0.0))
+        .withColumn("days_of_cover",
+                    F.when(F.col("avg_daily_demand") > 0,
+                           F.round(F.col("on_hand") / F.col("avg_daily_demand"), 1)))
+        .drop("on_hand_raw")
+        .join(products.select("sku", "model_id", "category", "size", "color", "list_price_usd"),
+              "sku")
+        .join(stores.select("store_id", "country", "city"), "store_id")
+        .withColumn("lost_sales_usd_est",
+                    F.round(F.col("lost_units_est") * F.col("list_price_usd"), 2))
+    )
+    return df
+
+
+def kpi_weekly(stockouts: DataFrame, daily: DataFrame) -> DataFrame:
+    """KPIs semanales por país-tienda-categoría-talla (grano del dashboard)."""
+    dims = ["week_start", "country", "store_id", "category", "size"]
+    so = (stockouts.withColumn("week_start", F.date_trunc("week", "date").cast("date"))
+          .groupBy(dims).agg(
+              F.sum(F.col("is_active").cast("int")).alias("active_sku_days"),
+              F.sum(F.col("is_stockout").cast("int")).alias("stockout_sku_days"),
+              F.round(F.sum("lost_units_est"), 1).alias("lost_units_est"),
+              F.round(F.sum("lost_sales_usd_est"), 2).alias("lost_sales_usd_est"),
+          ))
+    sales = (daily.withColumn("week_start", F.date_trunc("week", "date").cast("date"))
+             .groupBy(dims).agg(F.sum("units_sold").alias("units_sold"),
+                                F.sum("net_sales_usd").alias("net_sales_usd")))
+    return (so.join(sales, dims, "left").fillna({"units_sold": 0, "net_sales_usd": 0})
+            .withColumn("stockout_rate", F.round(
+                F.col("stockout_sku_days") / F.greatest(F.col("active_sku_days"), F.lit(1)), 4)))
+
+
+def size_curve(stockouts: DataFrame) -> DataFrame:
+    """Participación de cada talla en ventas vs. en stock, por categoría.
+
+    `stock_minus_sales_share` < 0 => la talla tiene menos stock del que vende (sub-surtida).
+    """
+    agg = stockouts.groupBy("category", "size").agg(
+        F.sum("units_sold").alias("units_sold"),
+        F.avg("on_hand").alias("avg_on_hand"),
+        F.avg(F.col("is_stockout").cast("double")).alias("stockout_rate"),
+    )
+    w = Window.partitionBy("category")
+    return (agg
+            .withColumn("sales_share", F.round(F.col("units_sold") / F.sum("units_sold").over(w), 4))
+            .withColumn("stock_share",
+                        F.round(F.col("avg_on_hand") / F.sum("avg_on_hand").over(w), 4))
+            .withColumn("stock_minus_sales_share",
+                        F.round(F.col("stock_share") - F.col("sales_share"), 4))
+            .withColumn("stockout_rate", F.round("stockout_rate", 4)))

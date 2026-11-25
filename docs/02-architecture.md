@@ -41,7 +41,7 @@ flowchart LR
 |---|---|---|
 | **Bronze** | `bronze_sales`, `bronze_inventory`, `bronze_weather`, `bronze_holidays` | Ingesta incremental tal cual llega (Auto Loader), + metadatos `_ingested_at`, `_source_file` |
 | **Silver** | `silver_sales`, `silver_inventory`, `silver_products`, `silver_stores`, `silver_weather`, `silver_holidays` | Tipos correctos, deduplicación, expectations (precio ≥ 0, cantidad > 0, claves no nulas) |
-| **Gold** | `gold_daily_sales`, `gold_stockout_daily`, `gold_demand_features`, `gold_kpi_store_category` | Modelos de negocio listos para BI y ML |
+| **Gold** | `gold_daily_sales`, `gold_stockout_daily`, `gold_kpi_weekly`, `gold_size_curve` (Fase 5: `gold_demand_features`) | Modelos de negocio listos para BI y ML |
 | **ML out** | `gold_demand_forecast`, `gold_replenishment_suggestions` | Salida del forecast y lógica de reposición |
 
 ## Stack

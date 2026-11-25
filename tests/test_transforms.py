@@ -4,18 +4,10 @@ import datetime as dt
 import json
 
 import pytest
-from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 
 from src import transforms as T
 from src.data_gen.generate import Quality, simulate
-
-
-@pytest.fixture(scope="session")
-def spark():
-    return (SparkSession.builder.master("local[2]").appName("tests")
-            .config("spark.sql.shuffle.partitions", "2")
-            .config("spark.sql.session.timeZone", "UTC").getOrCreate())
 
 
 @pytest.fixture(scope="module")
