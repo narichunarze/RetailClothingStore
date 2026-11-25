@@ -137,10 +137,29 @@ def load_holidays(holidays_dir: Path | None) -> set[tuple[str, str]]:
 # --------------------------------------------------------------------------- simulación
 
 
-def simulate(out: Path, truth: Path | None, start: dt.date, days: int, n_stores: int,
+POLICIES = ("even_split", "size_curve", "size_aware")
+
+
+def simulate(out: Path | None, truth: Path | None, start: dt.date, days: int, n_stores: int,
              n_models: int, seed: int, weather_dir: Path | None = None,
-             holidays_dir: Path | None = None, quality: Quality | None = None) -> dict:
+             holidays_dir: Path | None = None, quality: Quality | None = None,
+             policy: str = "even_split") -> dict:
+    """Simula el negocio día a día.
+
+    `policy` = cómo repone el planner cada lunes (ver docs/09-policy-backtest.md):
+      - even_split: práctica actual; venta del modelo-color repartida igual entre tallas.
+      - size_curve: mismo total, repartido según la curva de tallas observada.
+      - size_aware: total con demanda sin censura (venta + perdida) y curva observada,
+                    como hace la solución (forecast + venta perdida estimada).
+    `out=None` no escribe archivos (útil para backtests).
+    """
+    if policy not in POLICIES:
+        raise ValueError(f"policy debe ser una de {POLICIES}")
     rng = np.random.default_rng(seed)
+    # RNG separados: la demanda y la reposición no dependen del resto de la simulación,
+    # así distintas políticas enfrentan exactamente la misma demanda.
+    demand_rng = np.random.default_rng([seed, 1])
+    policy_rng = np.random.default_rng([seed, 2])
     q = quality or Quality()
     dates = [start + dt.timedelta(days=i) for i in range(days)]
 
@@ -187,10 +206,16 @@ def simulate(out: Path, truth: Path | None, start: dt.date, days: int, n_stores:
     in_transit = np.zeros((4, P))                  # llegadas en t+0..t+3
     returns_queue = np.zeros((MAX_RETURN_LAG + 1, P))
     recent_sales = np.zeros((14, P))
+    recent_demand = np.zeros((14, P))
+    cum_demand = np.zeros(P)
+    on_hand_sum = 0.0
+    stockout_days = np.zeros(P)
+    active_days = np.zeros(P)
     returns_buffer: list[pd.DataFrame] = []
     pending_dupes: pd.DataFrame | None = None
     lost_rows = []
-    stats = {"sales_lines": 0, "units": 0, "lost_units": 0, "returns": 0, "inventory_rows": 0}
+    stats = {"sales_lines": 0, "units": 0, "lost_units": 0, "returns": 0, "inventory_rows": 0,
+             "demand_units": 0}
 
     for t, d in enumerate(dates):
         ds = d.isoformat()
@@ -215,23 +240,33 @@ def simulate(out: Path, truth: Path | None, start: dt.date, days: int, n_stores:
             discount = np.maximum(markdown, bf_promo)
             lam = (base * cfg.WEEKDAY_FACTOR[d.weekday()] * season_f * temp_f * event_f
                    * hol_f * (1 + 1.5 * discount))
-        demand = rng.poisson(lam)
+        demand = demand_rng.poisson(lam)
         sales = np.minimum(demand, np.maximum(on_hand, 0)).astype(int)
         lost = demand - sales
         on_hand -= sales
         recent_sales = np.roll(recent_sales, -1, axis=0)
         recent_sales[-1] = sales
+        recent_demand = np.roll(recent_demand, -1, axis=0)
+        recent_demand[-1] = demand
+        cum_demand += demand
+        stats["demand_units"] += int(demand.sum())
 
         # 3) reposición semanal (lunes): llega el jueves; disponibilidad del CD limitada
         if d.weekday() == 0 and t >= 7:
             # El planner mira la venta del modelo-color (no por talla), proyecta 3 semanas y
             # reparte el pedido en partes iguales entre tallas -> sesgo de curva de tallas.
-            group_sales = np.bincount(group, weights=recent_sales.mean(axis=0))[group]
-            target = (group_sales / group_size * COVER_DAYS * 1.15
-                      * rng.lognormal(0, 0.15, P))
+            basis = recent_demand if policy == "size_aware" else recent_sales
+            group_total = np.bincount(group, weights=basis.mean(axis=0))[group]
+            if policy == "even_split":
+                share = 1 / group_size
+            else:  # curva observada (con suavizado hacia el reparto parejo)
+                group_cum = np.bincount(group, weights=cum_demand)[group]
+                share = (cum_demand + 1) / (group_cum + group_size)
+            target = (group_total * share * COVER_DAYS * 1.15
+                      * policy_rng.lognormal(0, 0.15, P))
             target = np.maximum(target, MIN_DISPLAY)
             need = np.maximum(target - on_hand - in_transit.sum(axis=0), 0)
-            dc_avail = rng.uniform(0.75, 1.0, size=group.max() + 1)[group]
+            dc_avail = policy_rng.uniform(0.75, 1.0, size=group.max() + 1)[group]
             in_transit[3] += np.ceil(need * dc_avail)
 
         # 4) líneas POS
@@ -286,13 +321,24 @@ def simulate(out: Path, truth: Path | None, start: dt.date, days: int, n_stores:
             if pending_dupes is not None:
                 df = pd.concat([df, pending_dupes], ignore_index=True)
             pending_dupes = df.sample(frac=q.duplicate_rate, random_state=int(rng.integers(1e9)))
-            _write_csv(df, out / "sales" / f"date={ds}" / "sales.csv")
+            if out is not None:
+                _write_csv(df, out / "sales" / f"date={ds}" / "sales.csv")
 
         # 5) devoluciones registradas hoy
-        _flush_returns(returns_buffer, ds, out, stats)
+        if out is not None:
+            _flush_returns(returns_buffer, ds, out, stats)
+        else:
+            returns_buffer.clear()
 
         # 6) snapshot de inventario al cierre (JSON lines, gzip)
-        _write_inventory(pairs, on_hand, in_transit, ds, out, rng, q, stats)
+        if out is not None:
+            _write_inventory(pairs, on_hand, in_transit, ds, out, rng, q, stats)
+
+        # métricas de negocio (para comparar políticas): SKU activo = demanda en 14 días
+        active = recent_demand.sum(axis=0) > 0
+        active_days += active
+        stockout_days += active & (on_hand <= 0)
+        on_hand_sum += float(np.maximum(on_hand, 0).sum())
 
         # 7) verdad de terreno: demanda perdida
         if truth is not None and lost.any():
@@ -303,12 +349,22 @@ def simulate(out: Path, truth: Path | None, start: dt.date, days: int, n_stores:
         stats["lost_units"] += int(lost.sum())
 
     # maestros
-    _write_csv(products.drop(columns="_popularity"), out / "master" / "products.csv")
-    _write_csv(stores.drop(columns="size_factor"), out / "master" / "stores.csv")
+    if out is not None:
+        _write_csv(products.drop(columns="_popularity"), out / "master" / "products.csv")
+        _write_csv(stores.drop(columns="size_factor"), out / "master" / "stores.csv")
     if truth is not None and lost_rows:
         truth.mkdir(parents=True, exist_ok=True)
         pd.concat(lost_rows).to_csv(truth / "lost_sales.csv.gz", index=False)
-    stats.update(skus=len(products), stores=n_stores, store_sku_pairs=P)
+    sizes = pairs["size"].to_numpy()
+    stats.update(
+        skus=len(products), stores=n_stores, store_sku_pairs=P, policy=policy,
+        stockout_rate=round(float(stockout_days.sum() / max(active_days.sum(), 1)), 4),
+        fill_rate=round(stats["units"] / max(stats["demand_units"], 1), 4),
+        avg_inventory_units=round(on_hand_sum / days, 1),
+        stockout_rate_by_size={s: round(float(stockout_days[sizes == s].sum()
+                                              / max(active_days[sizes == s].sum(), 1)), 4)
+                               for s in pd.unique(sizes)},
+    )
     return stats
 
 
@@ -381,13 +437,15 @@ def main() -> None:
     p.add_argument("--stores", type=int, default=12)
     p.add_argument("--models", type=int, default=40)
     p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--policy", choices=POLICIES, default="even_split",
+                   help="Política de reposición del planner (default: práctica actual)")
     p.add_argument("--weather-dir", type=Path, default=None,
                    help="Carpeta con city=<x>/weather.json (ver ingest_external.py)")
     p.add_argument("--holidays-dir", type=Path, default=None,
                    help="Carpeta con country=<xx>/<year>.json (ver ingest_external.py)")
     a = p.parse_args()
     stats = simulate(a.out, a.truth, a.start, a.days, a.stores, a.models, a.seed,
-                     a.weather_dir, a.holidays_dir)
+                     a.weather_dir, a.holidays_dir, policy=a.policy)
     print(json.dumps(stats, indent=2))
 
 

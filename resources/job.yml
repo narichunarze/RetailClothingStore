@@ -54,3 +54,4 @@ resources:
               catalog: ${var.catalog}
               schema: ${var.schema}
               bundle_root: ${workspace.file_path}
+              reader_group: ${var.reader_group}

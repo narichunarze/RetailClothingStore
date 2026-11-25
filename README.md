@@ -52,6 +52,7 @@ flowchart LR
 | **ML** | Forecast semanal global (HistGradientBoosting, Poisson), entrenado con demanda *sin censura* (venta + venta perdida). Solo recibe el alias `champion` si le gana al baseline | [Forecast](docs/07-forecast.md) |
 | **Reposición** | Revisión periódica con stock de seguridad, comparada contra el reparto parejo actual | [Forecast](docs/07-forecast.md) |
 | **IA para el negocio** | Vistas en español con definiciones por columna, consultadas por un Genie Agent | [Genie](docs/08-genie.md) |
+| **Gobernanza** | El grupo de negocio solo lee las vistas semánticas (`GRANT SELECT`), no las tablas base | [Genie](docs/08-genie.md) |
 | **DevOps** | Asset Bundles (dev/prod), GitHub Actions: lint, tests, validate y deploy a prod en cada merge | [CI/CD](docs/06-cicd.md) |
 
 ## Resultados
@@ -59,8 +60,9 @@ flowchart LR
 | Qué | Resultado |
 |---|---|
 | Venta perdida estimada vs. la real del generador | **~8% de error**. La primera versión se pasaba en un 60%; se encontró y corrigió la causa (snapshot al cierre) |
-| Forecast, WAPE tienda × modelo-color (8 semanas) | **0,32** contra 0,40 de "semana anterior" y 0,33 del promedio de 4 semanas |
+| Forecast, WAPE tienda × modelo-color (8 semanas, 2 años de historia) | **0,27** contra 0,40 de "semana anterior" y 0,33 del promedio de 4 semanas. País × categoría: **0,16** |
 | Reposición, talla M (ropa, una semana) | El modelo envía **2.832 u.** contra 489 del reparto parejo; XS y XXL bajan a 0 |
+| **Backtest de la política** (mismo año, misma demanda) | **−57% de venta perdida** y quiebre de 5,5% a 3,5%, con +0,4% de inventario ([detalle](docs/09-policy-backtest.md)) |
 | Genie Agent | **12/12 benchmarks** en 4 iteraciones (6 → 9 → 10 → 12) |
 | Tests | 44 tests (`pytest`), con validación end-to-end contra la verdad del generador |
 
@@ -99,10 +101,9 @@ Detalle de setup: [plan de trabajo](docs/03-plan.md) y [datos fuente](docs/04-so
 
 ## Próximos pasos
 
-1. **Dos años de historia**, para que el forecast aprenda Black Friday y Navidad (hoy el período de prueba los incluye sin haberlos visto).
-2. **Backtest de la política de reposición**: simular cuánto bajaría el quiebre con la reposición sugerida.
-3. **Agente con herramientas** (Agent Bricks / Mosaic AI) que explique cada sugerencia al planner.
-4. **Producción real**: service principal, workspaces separados y monitoreo de drift del modelo.
+1. **Piloto A/B** en tiendas reales para validar el backtest fuera de la simulación.
+2. **Agente con herramientas** (Agent Bricks / Mosaic AI) que explique cada sugerencia al planner.
+3. **Producción real**: service principal, workspaces separados y monitoreo de drift del modelo.
 
 ## Estructura
 

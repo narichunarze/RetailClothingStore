@@ -18,6 +18,20 @@ databricks fs cp -r data/raw dbfs:/Volumes/workspace/andesmart_dev/raw
 
 Sin `--weather-dir` y `--holidays-dir` se usa una temperatura sintética y no se aplica el efecto de feriados.
 
+### Dos años de historia (recomendado para el forecast)
+
+Con un solo año, el período de prueba del forecast incluye Black Friday y Navidad sin que el modelo los haya visto. Con dos años sí los aprende:
+
+```bash
+python -m src.data_gen.ingest_external --out data/raw --start 2024-01-01 --end 2025-12-31
+python -m src.data_gen.generate --out data/raw --truth data/truth --start 2024-01-01 --days 731 \
+  --weather-dir data/raw/weather --holidays-dir data/raw/holidays
+```
+
+Para reemplazar los datos ya cargados: borra el contenido del volume, sube los nuevos archivos y haz un **full refresh** del pipeline (Auto Loader recuerda qué archivos ya procesó).
+
+> `--policy` permite generar el mismo negocio con otra política de reposición (ver `docs/09-policy-backtest.md`).
+
 ## Fuentes
 
 | Ruta | Sistema simulado | Formato | Grano |

@@ -63,3 +63,23 @@ def test_black_friday_and_seasons():
     # enero: verano en el sur, invierno en el norte
     assert ce.season_factor("summer", jan, "S") > ce.season_factor("summer", jan, "N")
     assert ce.season_factor("all", jan, "S") == 1.0
+
+
+def test_policies_face_identical_demand_and_size_aware_wins():
+    args = (None, None, dt.date(2025, 3, 1), 90, 3, 8, 5)
+    even = simulate(*args, policy="even_split")
+    aware = simulate(*args, policy="size_aware")
+    assert even["demand_units"] == aware["demand_units"]  # contrafactual justo
+    assert aware["lost_units"] < even["lost_units"]
+    assert aware["stockout_rate_by_size"]["M"] < even["stockout_rate_by_size"]["M"]
+
+
+def test_no_files_written_without_out(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    simulate(None, None, dt.date(2025, 1, 1), 5, 2, 3, 1)
+    assert not any(tmp_path.rglob("*"))
+
+
+def test_unknown_policy_rejected():
+    with pytest.raises(ValueError):
+        simulate(None, None, dt.date(2025, 1, 1), 5, 2, 3, 1, policy="magic")

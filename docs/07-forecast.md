@@ -20,7 +20,15 @@
 
 Cómo interpretarlo:
 - A nivel SKU hay unas 2,6 unidades por semana. Con demanda Poisson, el error mínimo posible ronda 0,45–0,5, así que el modelo está cerca de ese piso. **El valor no está en el WAPE por SKU sino en la distribución entre tallas** (ver abajo).
-- Las 8 semanas de prueba incluyen Black Friday y Navidad, que el modelo nunca vio porque hay un solo año de historia. **Siguiente paso:** generar dos años (`--start 2024-01-01 --days 730`).
+- Las 8 semanas de prueba incluyen Black Friday y Navidad. Con un solo año de historia el modelo nunca los vio; **con dos años** sí los aprende:
+
+| WAPE | 1 año | **2 años** | Promedio 4 semanas |
+|---|---|---|---|
+| Tienda × SKU | 0,50 | **0,48** | 0,52 |
+| Tienda × modelo-color | 0,32 | **0,27** | 0,33 |
+| País × categoría | 0,25 | **0,16** | 0,26 |
+
+Con dos años, el sesgo del modelo sube a +8% (sobreestima un poco), lo que en reposición se traduce en algo más de stock de seguridad. Para el retail de ropa es preferible a subestimar. Se generan con `--start 2024-01-01 --days 731` (ver `docs/04-source-data.md`).
 
 ## Reposición (`src/ml/replenishment.py`)
 

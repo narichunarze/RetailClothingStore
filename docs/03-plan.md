@@ -43,7 +43,8 @@ Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 - [x] `gold_demand_forecast` y `gold_replenishment_suggestions`, con comparación contra el reparto parejo actual
 - [x] Tarea `forecast` en el job, después del quality gate (ver `docs/07-forecast.md`)
 - [ ] Correr en Databricks y revisar el experimento y el modelo en la UI
-- [ ] (Mejora) generar dos años de datos para que el modelo aprenda Black Friday y Navidad
+- [x] (Mejora) validado localmente: con dos años de historia el WAPE baja de 0,32 a 0,27 (modelo-color) y de 0,25 a 0,16 (país × categoría)
+- [ ] Regenerar los dos años, subirlos y hacer full refresh en dev y prod
 - **Demo:** "estas 20 tallas/colores se quiebran esta semana en estas tiendas, envía X unidades"
 
 ## Fase 6 · Capa de IA para el negocio (1 día) — US-05
@@ -53,11 +54,13 @@ Cada fase termina con algo **demostrable**. Marcar con `[x]` al completar.
 - [ ] (Opcional) Agente con herramientas (Agent Bricks / Mosaic AI Agent Framework) que explique la sugerencia de reposición
 - **Demo:** preguntas en español respondidas correctamente
 
-## Fase 7 · Entrega (½–1 día)
+## Fase 7 · Entrega y cierre técnico
 - [x] README final: problema → hallazgo → solución → resultados → trade-offs → próximos pasos
-- [ ] Capturas en `docs/img/`: linaje del pipeline, data quality, MLflow, Genie, dashboard
-- [ ] Video de 3 min "presentación al cliente"
-- [ ] Repasar `AI_LOG.md` y preparar historias STAR para la entrevista
+- [x] Backtest contrafactual de la política de reposición: −57% de venta perdida (`docs/09-policy-backtest.md`)
+- [x] Permisos en Unity Catalog: el grupo de negocio solo lee las vistas semánticas
+- [ ] Sincronizar en `src/semantic.py` el SQL final de los 12 benchmarks de Genie
+- [ ] Dashboard AI/BI armado en la UI y exportado al bundle (`databricks bundle generate dashboard`)
+- [ ] Capturas en `docs/img/`
 
 ## Mapeo con el puesto
 

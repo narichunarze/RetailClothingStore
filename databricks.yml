@@ -16,6 +16,9 @@ variables:
       Landing zone con los archivos crudos. En Free Edition dev y prod leen la misma;
       con un cliente real cada entorno tendría la suya.
     default: /Volumes/workspace/andesmart_dev/raw
+  reader_group:
+    description: Grupo de negocio con acceso de solo lectura a las vistas semánticas
+    default: account users
   schedule_status:
     description: PAUSED o UNPAUSED para el job diario
     default: PAUSED
